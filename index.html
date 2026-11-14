@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python Start · Урок 3 — Условный оператор</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+color-scheme:light;
+--ink:#1c1940; --ink-2:#4d4a72; --ink-3:#8a87a8;
+--card:#ffffff; --card-2:#f5f2ff; --line:#e7e2fb;
+--violet:#7b5cff; --violet-d:#5a3be0; --pink:#ff6fb0; --peach:#ffb48c; --sky:#5fc3ff; --mint:#3fd7a6; --sun:#ffcf4a; --orange:#ff8a3d;
+--ok:#10b47f; --ok-bg:#e6fbf3; --bad:#ef3d6b; --bad-bg:#ffedf2;
+--code-bg:#0f0d26; --code-fg:#ecebff; --code-line:#1f1c44;
+--bar:#232546; --bar-2:#33365e;
+--f-display:"Nunito",system-ui,sans-serif;
+--f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+--f-code:"JetBrains Mono",ui-monospace,Consolas,monospace;
+--clay:0 1px 0 rgba(255,255,255,.95) inset,0 -5px 12px rgba(91,66,190,.07) inset,0 16px 34px -14px rgba(64,40,150,.30),0 3px 8px rgba(64,40,150,.06);
+--clay-sm:0 1px 0 rgba(255,255,255,.9) inset,0 -3px 8px rgba(91,66,190,.08) inset,0 8px 18px -10px rgba(64,40,150,.32);
+--r-xl:36px; --r-lg:26px; --r-md:18px; --r-sm:12px;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:#efeaff;color:var(--ink);font-family:var(--f-body);font-weight:600;-webkit-font-smoothing:antialiased;overflow:hidden}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,textarea:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+#bg{position:fixed;inset:0;z-index:0;transition:background .6s ease;background:var(--bgimg)}
+#bg::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.55) 1.2px,transparent 1.3px);background-size:26px 26px;opacity:.45;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;animation:drift 18s ease-in-out infinite alternate}
+.blob.b1{width:42vw;height:42vw;left:-10vw;top:-12vw;background:var(--b1)}
+.blob.b2{width:36vw;height:36vw;right:-8vw;bottom:-10vw;background:var(--b2);animation-delay:-6s}
+.blob.b3{width:26vw;height:26vw;right:22vw;top:-8vw;background:var(--b3);animation-delay:-11s}
+@keyframes drift{to{transform:translate(4vw,3vw) scale(1.08)}}
+body[data-bg="0"]{--bgimg:linear-gradient(135deg,#efe4ff 0%,#ffe1ef 45%,#ffe9d9 100%);--b1:#b9a2ff;--b2:#ffb3cf;--b3:#ffd2b3}
+body[data-bg="1"]{--bgimg:linear-gradient(135deg,#dff3ff 0%,#e6e4ff 50%,#ffe4f1 100%);--b1:#8fd4ff;--b2:#c3b3ff;--b3:#ffc2dc}
+body[data-bg="2"]{--bgimg:linear-gradient(135deg,#d9fbef 0%,#dff1ff 55%,#efe6ff 100%);--b1:#8ff0cb;--b2:#9fd6ff;--b3:#d1c2ff}
+body[data-bg="3"]{--bgimg:linear-gradient(135deg,#fff0dd 0%,#ffe3ea 50%,#efe3ff 100%);--b1:#ffcf9f;--b2:#ffb1c6;--b3:#cdb6ff}
+body[data-bg="4"]{--bgimg:linear-gradient(135deg,#e9e3ff 0%,#dcf4ff 50%,#dbfbf0 100%);--b1:#b4a4ff;--b2:#8fe3ff;--b3:#93f2cf}
+body[data-bg="lab"]{--bgimg:linear-gradient(135deg,#2b1060 0%,#4a1470 50%,#1d1650 100%);--b1:#8a3dff;--b2:#ff4fa8;--b3:#4a6bff}
+body[data-bg="night"]{--bgimg:linear-gradient(135deg,#141a4a 0%,#2a1f6e 55%,#0f2b5c 100%);--b1:#5a4dff;--b2:#22c7ff;--b3:#ff5fb0}
+#app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;padding:10px 16px 8px}
+#stage{flex:1;min-height:0;display:flex;justify-content:center}
+.slide{position:relative;width:100%;max-width:1760px;height:100%;overflow-y:auto;overflow-x:hidden;background:rgba(255,255,255,.80);backdrop-filter:blur(14px);border-radius:var(--r-xl);box-shadow:var(--clay);padding:20px clamp(18px,2.6vw,44px) 24px;scrollbar-width:thin}
+.slide.anim{animation:slideIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.slide.dark{background:rgba(18,15,46,.86);color:#eeeaff;--ink:#f3f0ff;--ink-2:#c3bfe6;--ink-3:#8f8bb8;--card:#1c1940;--card-2:#26224f;--line:#35306a}
+.sl-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font:800 13px var(--f-display);letter-spacing:.04em;background:var(--card-2);color:var(--ink-2)}
+.chip.num{background:linear-gradient(135deg,#6f63ff,#a64dff);color:#fff;box-shadow:0 6px 14px -6px rgba(111,99,255,.8)}
+.sl-head .sp{flex:1}
+.chip.badge{background:#fff4d0;color:#8a5a00;border:1.5px solid #ffe08a}
+.dark .chip.badge{background:rgba(255,207,74,.12);color:#ffd76b;border-color:rgba(255,207,74,.35)}
+h1.t{font:900 clamp(28px,3.5vw,50px)/1.08 var(--f-display);letter-spacing:-.02em;margin:0 0 12px;color:var(--ink)}
+h1.t code{font-family:var(--f-code);font-weight:800;font-size:.86em;background:#e9e6f5;color:var(--ink);border-radius:.25em;padding:.02em .22em}
+p.lead{font-size:clamp(16px,1.45vw,21px);line-height:1.55;color:var(--ink-2);margin:0 0 22px;max-width:70ch;font-weight:700}
+.body{display:flex;flex-direction:column;gap:20px}
+.emj{display:block;line-height:1;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 10px 10px rgba(60,40,140,.22));text-align:center}
+.float{animation:bob 4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px) rotate(-3deg)}}
+.island{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--clay);padding:20px}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.icon-bub{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;background:var(--tint,#efeaff);box-shadow:var(--clay-sm);flex:none}
+.icon-bub .emj{font-size:42px}
+.card-t{font:800 19px/1.2 var(--f-display);margin:12px 0 6px;color:var(--ink);overflow-wrap:anywhere}
+.card-d{font-size:15.5px;line-height:1.5;color:var(--ink-2);margin:0}
+.lift{transition:transform .25s ease}
+.lift:hover{transform:translateY(-6px)}
+.t-violet{--tint:#ece6ff}.t-pink{--tint:#ffe3f0}.t-peach{--tint:#ffeadd}.t-sky{--tint:#dff3ff}.t-mint{--tint:#dcfaef}.t-sun{--tint:#fff4cf}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:20px;font:800 18px/1 var(--f-display);color:#fff;background:linear-gradient(135deg,#14c98e,#0fb3b0);box-shadow:0 6px 0 #08876f,0 16px 26px -10px rgba(16,180,127,.7);transition:transform .1s,box-shadow .1s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #08876f}
+.btn.orange{background:linear-gradient(135deg,#ffa31a,#ff6a2b);box-shadow:0 6px 0 #c4470f,0 16px 26px -10px rgba(255,106,43,.7)}
+.btn.violet{background:linear-gradient(135deg,#7b5cff,#b14dff);box-shadow:0 6px 0 #4e2fc4,0 16px 26px -10px rgba(123,92,255,.7)}
+.btn.ghost{background:var(--card-2);color:var(--ink);box-shadow:0 5px 0 var(--line)}
+.btn.sm{padding:11px 16px;font-size:15px;border-radius:15px}
+.btn.icon{padding:13px 15px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.code{background:var(--code-bg);color:var(--code-fg);border-radius:var(--r-lg);box-shadow:0 18px 36px -18px rgba(15,13,38,.8);overflow:hidden;min-width:0}
+.code-top{display:flex;align-items:center;gap:8px;padding:13px 18px;border-bottom:1px solid var(--code-line)}
+.dots{display:flex;gap:7px}.dots i{width:12px;height:12px;border-radius:50%;background:#ff4f6d}.dots i:nth-child(2){background:#ffb020}.dots i:nth-child(3){background:#1ed39a}
+.code-top .fn{margin-left:auto;font:600 13px var(--f-code);color:#a6a2d6}
+.code-top .ttl{font:800 13px var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:#b6b1ea;margin-left:8px}
+.code pre{margin:0;padding:18px 20px;font:600 clamp(14px,1.25vw,18px)/1.7 var(--f-code);overflow-x:auto;white-space:pre}
+.code pre .ln{display:block;border-radius:8px;padding:0 8px;margin:0 -8px;transition:background .2s}
+.k-fn{color:#6fd3ff}.k-str{color:#9df07a}.k-num{color:#ffb35c}.k-kw{color:#c792ff}.k-com{color:#7a77a6;font-style:italic}.k-op{color:#ff8fc2}
+.term{background:#070617;color:#4bf0a6;border-radius:var(--r-md);font:700 clamp(15px,1.3vw,19px)/1.6 var(--f-code);padding:16px 18px;min-height:64px;white-space:pre-wrap;word-break:break-word}
+.term .p{color:#6c6995;margin-right:10px}
+.term .err{color:#ff6b8f}
+.term .hint{color:#ffd76b;font-family:var(--f-body);font-weight:700;font-size:.92em;display:block;margin-top:6px}
+.term .muted{color:#6c6995}
+.fld{display:flex;flex-direction:column;gap:5px;margin:8px 0;font:800 14px var(--f-display);color:var(--ink-2)}
+.fld input{font:700 16px var(--f-body);padding:10px 14px;border-radius:14px;border:2px solid var(--line);background:#fff;color:var(--ink);outline:none}
+.dark .fld input{background:#161335;border-color:#35306a;color:#eeeaff}
+.fld input:focus{border-color:var(--violet)}
+.seg{display:inline-flex;background:var(--card-2);border-radius:14px;padding:4px;gap:4px;align-self:flex-start}
+.seg button{padding:9px 14px;border-radius:11px;font:800 14px var(--f-display);color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--violet);color:#fff;box-shadow:0 3px 8px -2px rgba(123,92,255,.6)}
+#bar{position:relative;z-index:5;margin:8px auto 0;width:100%;max-width:1760px;display:flex;align-items:center;gap:6px;background:var(--bar);color:#dcdaf5;border-radius:24px;padding:9px 12px;box-shadow:0 18px 30px -14px rgba(20,18,60,.6)}
+#bar .bb{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;font:800 14px var(--f-display);color:#dcdaf5}
+#bar .bb:hover{background:var(--bar-2)}
+#bar svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#bar .mid{flex:1;display:flex;align-items:center;justify-content:center;gap:14px}
+#bar .nav{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--bar-2)}
+#bar .nav.next{background:linear-gradient(135deg,#ff4fb2,#a64dff);color:#fff;box-shadow:0 6px 16px -6px rgba(255,79,178,.8)}
+#bar .cnt{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:84px;font:800 17px var(--f-code);color:#fff}
+#bar .cnt small{color:#8d8ab6;font-weight:600;margin:0 4px}
+#bar .prog{width:84px;height:5px;border-radius:5px;background:#3b3e68;overflow:hidden}
+#bar .prog i{display:block;height:100%;background:linear-gradient(90deg,#ff4fb2,#a64dff);transition:width .3s}
+.ov{position:fixed;inset:0;z-index:20;background:rgba(22,18,60,.45);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}
+.ov-card{background:#fff;color:#1c1940;border-radius:30px;box-shadow:var(--clay);width:100%;max-width:1100px;max-height:100%;display:flex;flex-direction:column;overflow:hidden}
+.ov-head{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid #eee9ff}
+.ov-head h2{margin:0;font:900 22px var(--f-display);flex:1}
+.ov-body{overflow:auto;padding:20px 22px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.thumb{text-align:left;background:#f6f3ff;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 0 #fff inset,0 6px 14px -10px rgba(64,40,150,.4);transition:transform .15s}
+.thumb:hover{transform:translateY(-3px);background:#efeaff}
+.thumb.cur{box-shadow:inset 0 0 0 2.5px #7b5cff}
+.thumb b{font:800 12px var(--f-code);color:#7b5cff}
+.thumb span{font:800 14.5px/1.25 var(--f-display);color:#1c1940}
+.thumb em{font-style:normal;font-size:12px;color:#8a87a8}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:30;background:#1c1940;color:#fff;padding:12px 18px;border-radius:14px;font:800 15px var(--f-display);box-shadow:0 12px 24px -10px rgba(0,0,0,.5)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+.tc{position:relative;width:100%;max-width:100%;border-radius:22px;overflow:hidden;box-shadow:var(--clay-sm),0 0 0 1px #e9e4ff;background:#fbfaff}
+.tc canvas{display:block}
+.tc-badge{position:absolute;right:10px;bottom:10px;background:rgba(255,255,255,.92);color:#3a375e;font:700 12px var(--f-code);padding:5px 9px;border-radius:9px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.cover{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.cover h1.t{font-size:clamp(32px,4.6vw,64px);max-width:22ch}
+.cover-art{position:relative;width:min(560px,100%);aspect-ratio:16/9}
+.cover-art .ped{position:absolute;left:50%;bottom:2%;width:46%;height:20%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at 50% 30%,#fff 0%,#ece6ff 60%,#d6ccff 100%);box-shadow:0 18px 30px -12px rgba(80,50,180,.45)}
+.cover-art .hero{position:absolute;left:50%;bottom:10%;transform:translateX(-50%);font-size:clamp(90px,16vw,170px)}
+.cover-art .fl{position:absolute;font-size:clamp(34px,5vw,60px)}
+.loader{position:relative;width:min(520px,100%);height:54px;border-radius:999px;background:#fff;box-shadow:var(--clay);overflow:hidden;border:3px solid #ffe39a}
+.loader i{position:absolute;inset:4px auto 4px 4px;border-radius:999px;background:linear-gradient(90deg,#ffd23f,#ffb01f);box-shadow:0 2px 0 rgba(255,255,255,.7) inset;width:calc(var(--p,0%) - 8px);min-width:40px;transition:width .2s}
+.loader span{position:relative;z-index:1;display:grid;place-items:center;height:100%;font:800 16px var(--f-display);color:#6a4300}
+.sec{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:30px;align-items:center;min-height:min(62vh,560px)}
+.sec h1.t{font-size:clamp(36px,5.2vw,74px)}
+.sec .art{position:relative;display:grid;place-items:center;min-height:280px}
+.sec .art .emj.big{font-size:clamp(140px,26vh,240px)}
+.eyebrow{font:800 clamp(22px,2.6vw,34px) var(--f-code);color:#2f6bff;margin-bottom:6px}
+.fact{display:flex;gap:14px;align-items:center;margin-top:18px;background:#fff8dc;border-radius:20px;padding:14px 18px;box-shadow:var(--clay-sm);color:#6a4a00;font-size:16px;line-height:1.45}
+.dark .fact{background:rgba(255,207,74,.12);color:#ffd76b}
+.map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;position:relative}
+.map::before{content:"";position:absolute;left:12%;right:12%;top:62px;border-top:4px dashed #c8bcff;z-index:0}
+.map4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.map4::before{display:none}
+.mission{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.mission .n{font:900 14px var(--f-display);color:#fff;background:var(--violet);border-radius:999px;padding:6px 12px}
+.mission .card-t{margin:0}
+.bigq{display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px;padding:10px 0 20px}
+.bigq h1.t{font-size:clamp(30px,4.2vw,58px);max-width:20ch}
+.bigq .arts{display:flex;gap:30px;justify-content:center;align-items:center}
+.yn{display:flex;gap:22px;flex-wrap:wrap;justify-content:center}
+.reply{max-width:760px;border-radius:24px;padding:18px 22px;font-size:18px;line-height:1.5;text-align:left;display:flex;gap:16px;align-items:center;box-shadow:var(--clay);background:#fff;color:#1c1940}
+.reply.ok{background:var(--ok-bg)}
+.reply.no{background:#fff4e3}
+.reveal>*{animation:rise .5s both}
+@keyframes rise{from{transform:translateY(12px);opacity:0}}
+.def{font:900 clamp(28px,3.4vw,46px)/1.15 var(--f-display);margin:0;color:var(--ink)}
+.def em{font-style:normal;background:linear-gradient(transparent 60%,#ffe27a 60%)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+.places{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.places .btn.pick-bad{background:linear-gradient(135deg,#ff6f9b,#ff4f6d);box-shadow:0 7px 0 #c32a4c}
+.platform{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px;min-height:min(66vh,620px)}
+.platform .arts{display:flex;align-items:flex-end;gap:26px}
+.platform h1.t{font-size:clamp(34px,4.8vw,68px);max-width:20ch;margin:0}
+.platform .no{display:inline-block;background:linear-gradient(135deg,#ffa31a,#ff6a2b);color:#fff;border-radius:.3em;padding:0 .25em}
+.platform p.lead{margin:0;text-align:center}
+.flip{perspective:1000px;min-height:280px;text-align:left}
+.flip .in{position:relative;height:100%;min-height:280px;transition:transform .6s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-lg);box-shadow:var(--clay);padding:22px;display:flex;flex-direction:column}
+.flip .f{background:var(--card);align-items:center;justify-content:center;text-align:center;gap:10px}
+.flip .b{background:linear-gradient(150deg,#7b5cff,#b04dff);color:#fff;transform:rotateY(180deg);justify-content:center;gap:10px}
+.flip .b .card-t{color:#fff;margin:0}
+.flip .b p{margin:0;line-height:1.5;font-size:16px}
+.flip .b code{font-family:var(--f-code);background:rgba(255,255,255,.15);padding:1px 6px;border-radius:6px}
+.flip .hintx{font-size:13px;color:var(--ink-3);font-weight:800}
+.anat{display:flex;flex-direction:column;gap:18px;align-items:center}
+.anat .code{width:min(900px,100%)}
+.anat pre.huge{font-size:clamp(30px,5vw,72px);line-height:1.25;text-align:center;padding:26px 20px}
+.part{border-radius:14px;padding:0 4px;cursor:pointer;transition:background .2s,box-shadow .2s}
+.part.on{background:rgba(255,255,255,.14);box-shadow:0 0 0 3px var(--pc)}
+.bubbles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%}
+.bub{border-radius:20px;padding:14px 16px;background:var(--card);box-shadow:var(--clay-sm);border:3px solid transparent;text-align:left;font-size:15.5px;line-height:1.4;color:var(--ink-2);transition:transform .2s,border-color .2s}
+.bub b{display:block;font:900 17px var(--f-code);margin-bottom:4px;color:var(--pc)}
+.bub.on{border-color:var(--pc);transform:translateY(-5px)}
+.cheat{width:100%;border-collapse:collapse;font-size:15px}
+.cheat td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.cheat td:first-child{white-space:nowrap}
+.cheat code{font-family:var(--f-code);font-weight:700;background:var(--card-2);border-radius:10px;padding:4px 10px;color:var(--violet-d)}
+.dark .cheat code{background:#26224f;color:#c9bfff}
+.praise{margin:0;border-radius:14px;padding:12px 16px;background:rgba(30,211,154,.12);border:1px solid rgba(30,211,154,.35);color:#0b8a63;font-weight:700;font-size:15px}
+.dark .praise{color:#9ff5cf}
+/* ===== добавки урока 3 ===== */
+/* JetBrains Mono склеивает == != <= >= в лигатуры (=, ≠, ≤, ≥) — отключаем, дети должны видеть настоящие символы. !important нужен: inline-стиль font: на карточках иначе сбрасывает настройку */
+.code pre,.term,.editor,code,.bub b,.needline{font-variant-ligatures:none!important;font-feature-settings:"liga" 0,"calt" 0!important}
+.lesson-pic{display:block;width:clamp(150px,19vw,250px);margin:auto}
+.lesson-art{border-radius:50%;padding:clamp(30px,4vw,56px);background:linear-gradient(150deg,#ffffff,#e9f3ff);display:grid;place-items:center}
+.lesson-art .emj{font-size:0}
+/* слайд «Что понадобится…» */
+.needwrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:clamp(18px,2.6vw,44px);align-items:center;width:min(1120px,100%)}
+.needsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:2}
+.needsvg line{stroke:#a493e6;stroke-width:2.5;stroke-linecap:round}
+.needcard{position:relative;z-index:1;background:linear-gradient(150deg,#ffe7c8,#ffd3ae);border-radius:24px;box-shadow:var(--clay);padding:clamp(26px,3vw,42px) clamp(32px,3.4vw,50px);text-align:center}
+.needline{font:700 clamp(20px,2.3vw,33px)/1.5 var(--f-code);color:#5a3a12;white-space:nowrap}
+.needline .kw{color:#7b5cff}
+.needcond{background:rgba(123,92,255,.20);box-shadow:0 0 0 2.5px rgba(123,92,255,.45);border-radius:10px;padding:1px 10px}
+.needbody{font:900 clamp(20px,2.3vw,30px)/1.45 var(--f-display);color:#5a3a12;margin-top:8px}
+.needlab{font-size:clamp(15px,1.5vw,20px);line-height:1.4;color:var(--ink-2);margin-top:clamp(36px,9vh,84px)}
+.needlab b{font-weight:900;color:var(--ink)}
+.needlab .emj{font-size:1.25em}
+.needlab-l{justify-self:end;text-align:right}
+.needlab-r{justify-self:start;text-align:left}
+@media (max-width:900px){.needwrap{grid-template-columns:minmax(0,1fr);justify-items:center;row-gap:18px}.needsvg{display:none}.needlab{margin-top:0;text-align:center;justify-self:center}}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;max-width:980px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;border-radius:16px;padding:14px 18px;background:var(--card);box-shadow:var(--clay-sm);font-size:16.5px;font-weight:800;transition:.15s}
+.opt .let{flex:none;width:26px;height:26px;border-radius:50%;background:var(--card-2);color:var(--ink-3);display:grid;place-items:center;font-size:12px;font-weight:900}
+.opt code{font-family:var(--f-code);font-size:.95em}
+.opt.ok{background:var(--ok-bg);box-shadow:0 0 0 2.5px var(--ok) inset}
+.opt.ok .let{background:var(--ok);color:#fff}
+.opt.bad{background:var(--bad-bg);opacity:.75}
+.opt.bad .let{background:#ff8787;color:#fff}
+.steps{display:flex;flex-direction:column;gap:10px}
+.stepbtn{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border-radius:16px;background:var(--card);box-shadow:var(--clay-sm);font-size:17px;font-weight:800}
+.stepbtn[disabled]{opacity:.35;cursor:default}
+.stepbtn.flash{background:var(--bad-bg);box-shadow:0 0 0 3px var(--bad) inset}
+.slots{display:flex;flex-direction:column;gap:10px}
+.slot{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:16px;border:2.5px dashed #cfc5ff;min-height:56px;font-size:17px;font-weight:800;color:var(--ink-3)}
+.slot.f{border-style:solid;border-color:#b7a6ff;background:#f4f0ff;color:var(--ink)}
+.slot .no{font:900 14px var(--f-display);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#7b5cff;color:#fff;flex:none}
+.slots.ok .slot{border-color:#7fe6c2;background:var(--ok-bg)}
+.brk{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;min-height:min(66vh,620px)}
+.brk h1.t{font-size:clamp(34px,4.6vw,64px);margin:0;max-width:20ch}
+.brk .clock{font:900 clamp(80px,13vw,190px)/1 var(--f-code);color:var(--violet-d);letter-spacing:.02em;padding:14px 40px;border-radius:40px;background:#fff;box-shadow:var(--clay);font-variant-numeric:tabular-nums}
+.brk .ring{width:min(560px,90%);height:14px;border-radius:14px;background:#ece6ff;overflow:hidden}
+.brk .ring i{display:block;height:100%;background:linear-gradient(90deg,#14c98e,#7b5cff);transition:width 1s linear}
+.brk.over .clock{color:var(--ok)}
+.brk .done{font:900 clamp(26px,3vw,40px) var(--f-display);color:var(--ok)}
+.lab .lab-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid var(--code-line)}
+.lab .lab-tabs button{padding:9px 15px;border-radius:999px;background:#1d1a44;border:1px solid #34306a;color:#d6d2ff;font:800 14.5px var(--f-display)}
+.lab .lab-tabs button[aria-selected="true"]{background:#7b5cff;border-color:#9b85ff;color:#fff}
+.lab-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;padding:18px}
+.lab-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.lab-col h4{margin:0;display:flex;justify-content:space-between;gap:10px;font:800 15px var(--f-display);color:#a9b8ff}
+.lab-col h4 small{font:700 13px var(--f-body);color:#8b87b8}
+.lab-col h4.o{color:#4bf0a6}
+.editor{width:100%;flex:1;min-height:clamp(240px,34vh,380px);resize:vertical;border:1px solid #2b2760;border-radius:18px;background:#050418;color:#c9f8d9;font:600 clamp(16px,1.45vw,21px)/1.65 var(--f-code);padding:16px 18px;tab-size:4;outline:none}
+.editor:focus{border-color:#7b5cff}
+.lab .term{min-height:clamp(200px,28vh,320px);border:1px solid #2b2760;border-radius:18px;font-size:clamp(16px,1.45vw,21px)}
+.lab-foot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;padding:0 18px 18px;align-items:center}
+.lab-tip{display:flex;gap:10px;align-items:center;background:#171440;border-radius:14px;padding:12px 14px;color:#bdb8e8;font-size:14.5px;line-height:1.4}
+.lab-tip .emj{font-size:28px;flex:none;text-align:left}
+@media (max-width:900px){
+.g3,.map,.bubbles,.split,.map4,.lab-grid,.lab-foot{grid-template-columns:minmax(0,1fr)}
+.map::before{display:none}
+.sec{grid-template-columns:minmax(0,1fr)}
+#bar .lbl{display:none}
+.slide{padding:18px 14px 26px;border-radius:26px}
+.opts{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div id="app">
+<main id="stage"><section id="slide" class="slide" aria-live="polite"></section></main>
+<nav id="bar" aria-label="Управление презентацией">
+<button class="bb" id="bRestart" title="В начало"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+<button class="bb" id="bGrid" title="Все слайды"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="lbl">Слайды</span></button>
+<div class="mid">
+<button class="nav" id="bPrev" title="Назад"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+<div class="cnt"><div><span id="cN">1</span><small>/</small><span id="cT">32</span></div><div class="prog"><i id="cP"></i></div></div>
+<button class="nav next" id="bNext" title="Далее"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+<button class="bb" id="bFull" title="Во весь экран"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</nav>
+</div>
+<div id="ovGrid" class="ov" hidden><div class="ov-card"><div class="ov-head"><h2>Все слайды урока</h2><button class="btn ghost sm" data-close>Закрыть</button></div><div class="ov-body"><div class="thumbs" id="thumbs"></div></div></div></div>
+<canvas id="confetti"></canvas>
+
+<script>
+/* ===== Мини-Python для слайдов урока 3 =====
+   Расширен относительно уроков 1–2: операторы сравнения (== != < > <= >=),
+   булевы значения True/False, условный оператор if (с отступами, опционально else),
+   команда черепашки write(). Поддержка: print(), input(), int()/str(), for-range, turtle. */
+const PY = (() => {
+class PyErr extends Error { constructor(type, msg, hint, line){ super(msg); this.type = type; this.hint = hint || ''; this.line = line; } }
+const I = v => ({ t:'int', v }), F = v => ({ t:'float', v }), S = v => ({ t:'str', v }), L = v => ({ t:'list', v }), B = v => ({ t:'bool', v });
+const isNum = x => x.t === 'int' || x.t === 'float';
+const TYPE = x => ({ int:'int', float:'float', str:'str', list:'list', range:'range', bool:'bool' })[x.t];
+const TURTLE = {
+forward:'fd', fd:'fd', backward:'bk', back:'bk', bk:'bk', left:'lt', lt:'lt', right:'rt', rt:'rt',
+color:'color', pencolor:'color', width:'width', pensize:'width', penup:'up', pu:'up', up:'up',
+pendown:'down', pd:'down', down:'down', goto:'goto', setpos:'goto', setposition:'goto', home:'home',
+setheading:'seth', seth:'seth', circle:'circle', speed:'speed', shape:'noop', exitonclick:'noop',
+done:'noop', mainloop:'noop', hideturtle:'hide', ht:'hide', showturtle:'show', st:'show',
+bgcolor:'noop', begin_fill:'begin', end_fill:'end', fillcolor:'fillcolor', Screen:'noop',
+write:'write'
+};
+const ARGNAME = { fd:'distance', bk:'distance', lt:'angle', rt:'angle', seth:'to_angle', width:'width', circle:'radius', speed:'speed' };
+const BUILTIN = ['print','range','len','str','int','abs','round','input'];
+const ALLNAMES = BUILTIN.concat(Object.keys(TURTLE));
+function fmtFloat(v){ if(!isFinite(v)) return v>0?'inf':v<0?'-inf':'nan'; if(Number.isInteger(v)&&Math.abs(v)<1e16) return v.toFixed(1); return String(v); }
+function toStr(x){ if(x.t==='bool')return x.v?'True':'False'; if(x.t==='int')return String(x.v); if(x.t==='float')return fmtFloat(x.v); if(x.t==='str')return x.v; if(x.t==='list')return '['+x.v.map(repr).join(', ')+']'; if(x.t==='range')return 'range(...)'; return '?'; }
+function repr(x){ return x.t==='str' ? "'"+x.v+"'" : toStr(x); }
+function truthy(x){ if(x.t==='bool')return x.v; if(x.t==='int'||x.t==='float')return x.v!==0; if(x.t==='str')return x.v.length>0; if(x.t==='list')return x.v.length>0; return true; }
+function tokenize(s, line){
+const toks=[]; let i=0;
+while(i<s.length){
+const c=s[i];
+if(c===' '||c==='\t'){i++;continue;}
+if(c==='#')break;
+if(/[0-9]/.test(c)||(c==='.'&&/[0-9]/.test(s[i+1]||''))){
+let j=i; while(j<s.length&&/[0-9_]/.test(s[j]))j++;
+let f=false;
+if(s[j]==='.'){f=true;j++;while(j<s.length&&/[0-9]/.test(s[j]))j++;}
+if(/[A-Za-zА-Яа-яЁё_]/.test(s[j]||''))throw new PyErr('SyntaxError','invalid decimal literal','Число и буквы склеились. Поставь между ними пробел или знак действия.',line);
+toks.push({k:'num',v:Number(s.slice(i,j).replace(/_/g,'')),f}); i=j; continue;
+}
+if(c==="'"||c==='"'){
+let j=i+1,out='';
+while(j<s.length&&s[j]!==c){
+if(s[j]==='\\'&&j+1<s.length){const n=s[j+1];out+=n==='n'?'\n':n==='t'?'\t':n;j+=2;continue;}
+out+=s[j];j++;
+}
+if(j>=s.length){
+const other=c==="'"?'"':"'";
+const hint=s.slice(i+1).includes(other)?'Кавычки должны быть одинаковыми: открыл '+c+' — закрой тоже '+c+'.':'Кавычка открыта, но не закрыта. Поставь такую же кавычку в конце текста.';
+throw new PyErr('SyntaxError','unterminated string literal',hint,line);
+}
+toks.push({k:'str',v:out}); i=j+1; continue;
+}
+if(/[A-Za-zА-Яа-яЁё_]/.test(c)){
+let j=i; while(j<s.length&&/[A-Za-z0-9А-Яа-яЁё_]/.test(s[j]))j++;
+toks.push({k:'name',v:s.slice(i,j)}); i=j; continue;
+}
+const two=s.slice(i,i+2);
+if(['**','//','==','!=','<=','>='].includes(two)){toks.push({k:'op',v:two});i+=2;continue;}
+if('+-*/%()[],=:.<>'.includes(c)){toks.push({k:'op',v:c});i++;continue;}
+if('«»“”„‘’'.includes(c))throw new PyErr('SyntaxError',`invalid character '${c}'`,"Используй обычные кавычки ' или \" — не «ёлочки» и не «лапки».",line);
+if('（）'.includes(c))throw new PyErr('SyntaxError',`invalid character '${c}'`,'Скобка набрана не той раскладкой. Используй обычные ( и ).',line);
+throw new PyErr('SyntaxError',`invalid character '${c}'`,'В коде есть символ, который Python не понимает.',line);
+}
+return toks;
+}
+function arith(op,a,b,line){
+const bothInt=a.t==='int'&&b.t==='int';
+if(op==='+'){
+if(isNum(a)&&isNum(b))return bothInt?I(a.v+b.v):F(a.v+b.v);
+if(a.t==='str'&&b.t==='str')return S(a.v+b.v);
+if(a.t==='list'&&b.t==='list')return L(a.v.concat(b.v));
+if(a.t==='str')throw new PyErr('TypeError',`can only concatenate str (not "${TYPE(b)}") to str`,"Нельзя склеить текст и число. Возьми число в кавычки ('10') или раздели запятой: print('Мне', 10)",line);
+throw new PyErr('TypeError',`unsupported operand type(s) for +: '${TYPE(a)}' and '${TYPE(b)}'`,'Число и текст нельзя сложить. Сделай оба значения текстом или оба числами.',line);
+}
+if(op==='*'){
+if(isNum(a)&&isNum(b))return bothInt?I(a.v*b.v):F(a.v*b.v);
+const seq=a.t==='str'||a.t==='list'?a:b.t==='str'||b.t==='list'?b:null;
+const n=seq===a?b:a;
+if(seq&&n.t==='int'){const k=Math.max(0,n.v);if(k*(seq.v.length||1)>100000)throw new PyErr('MemoryError','слишком длинная строка','Попробуй число поменьше.',line);return seq.t==='str'?S(seq.v.repeat(k)):L([].concat(...Array(k).fill(seq.v)));}
+if(seq)throw new PyErr('TypeError',`can't multiply sequence by non-int of type '${TYPE(n)}'`,"Текст можно умножать только на целое число: 'Мяу' * 3",line);
+}
+if(!(isNum(a)&&isNum(b)))throw new PyErr('TypeError',`unsupported operand type(s) for ${op}: '${TYPE(a)}' and '${TYPE(b)}'`,'Это действие работает только с числами. Числа пишутся без кавычек.',line);
+if(op==='-')return bothInt?I(a.v-b.v):F(a.v-b.v);
+if((op==='/'||op==='//'||op==='%')&&b.v===0)throw new PyErr('ZeroDivisionError','division by zero','На ноль делить нельзя — даже компьютеру!',line);
+if(op==='/')return F(a.v/b.v);
+if(op==='//')return bothInt?I(Math.floor(a.v/b.v)):F(Math.floor(a.v/b.v));
+if(op==='%'){const r=((a.v%b.v)+b.v)%b.v;return bothInt?I(r):F(r);}
+if(op==='**'){const r=Math.pow(a.v,b.v);return bothInt&&b.v>=0?I(r):F(r);}
+throw new PyErr('SyntaxError','invalid syntax','',line);
+}
+function cmp(op,a,b,line){
+const nv=x=>x.t==='bool'?(x.v?1:0):isNum(x)?x.v:null;
+const av=nv(a),bv=nv(b),bothNum=av!==null&&bv!==null;
+if(op==='=='||op==='!='){
+let eq;
+if(bothNum)eq=av===bv;
+else if(a.t==='str'&&b.t==='str')eq=a.v===b.v;
+else if(a.t==='list'&&b.t==='list')eq=a.v.length===b.v.length&&a.v.every((x,i)=>repr(x)===repr(b.v[i]));
+else eq=false;
+return B(op==='=='?eq:!eq);
+}
+if(bothNum)return B(op==='<'?av<bv:op==='>'?av>bv:op==='<='?av<=bv:av>=bv);
+if(a.t==='str'&&b.t==='str')return B(op==='<'?a.v<b.v:op==='>'?a.v>b.v:op==='<='?a.v<=b.v:a.v>=b.v);
+throw new PyErr('TypeError',`'${op}' not supported between instances of '${TYPE(a)}' and '${TYPE(b)}'`,"Нельзя сравнить число и текст. Убери кавычки у числа или примени int().",line);
+}
+function parser(toks,ctx,line){
+let p=0;
+const peek=()=>toks[p],next=()=>toks[p++];
+const isOp=v=>toks[p]&&toks[p].k==='op'&&toks[p].v===v;
+function expect(v,hint){
+if(isOp(v)){p++;return;}
+if(!toks[p]&&v===')')throw new PyErr('SyntaxError'," '(' was never closed",'Скобка открыта, но не закрыта. Поставь ) в конце.',line);
+if(!toks[p]&&v===']')throw new PyErr('SyntaxError',"'[' was never closed",'Квадратная скобка не закрыта. Поставь ] в конце.',line);
+throw new PyErr('SyntaxError','invalid syntax',hint||'Похоже, пропущена запятая или знак действия.',line);
+}
+function expr(){return comparison();}
+function comparison(){let a=add();while(isOp('==')||isOp('!=')||isOp('<')||isOp('>')||isOp('<=')||isOp('>=')){const op=next().v;a=cmp(op,a,add(),line);}return a;}
+function add(){let a=term();while(isOp('+')||isOp('-')){const op=next().v;a=arith(op,a,term(),line);}return a;}
+function term(){let a=unary();while(isOp('*')||isOp('/')||isOp('//')||isOp('%')){const op=next().v;a=arith(op,a,unary(),line);}return a;}
+function unary(){
+if(isOp('-')){next();const v=unary();if(!isNum(v))throw new PyErr('TypeError',`bad operand type for unary -: '${TYPE(v)}'`,'Минус ставится только перед числом.',line);return v.t==='int'?I(-v.v):F(-v.v);}
+if(isOp('+')){next();return unary();}
+return power();
+}
+function power(){const a=postfix();if(isOp('**')){next();return arith('**',a,unary(),line);}return a;}
+function postfix(){
+let a=atom();
+while(isOp('[')){next();const ix=expr();expect(']');
+if(!(a.t==='list'||a.t==='str'))throw new PyErr('TypeError',`'${TYPE(a)}' object is not subscriptable`,'',line);
+if(ix.t!=='int')throw new PyErr('TypeError','indices must be integers','Номер элемента — целое число.',line);
+let k=ix.v<0?a.v.length+ix.v:ix.v;
+if(k<0||k>=a.v.length)throw new PyErr('IndexError','index out of range','Такого номера в списке нет. Нумерация начинается с 0!',line);
+a=a.t==='str'?S([...a.v][k]):a.v[k];
+}
+return a;
+}
+function callArgs(){
+expect('(');
+const args=[],kwargs={};
+if(!isOp(')')){
+while(true){
+if(peek()&&peek().k==='name'&&toks[p+1]&&toks[p+1].k==='op'&&toks[p+1].v==='='){const key=next().v;next();kwargs[key]=expr();}
+else args.push(expr());
+if(isOp(',')){next();if(isOp(')'))break;continue;}
+break;
+}
+}
+expect(')','Похоже, между значениями пропущена запятая.');
+return {args,kwargs};
+}
+function atom(){
+const t=next();
+if(!t)throw new PyErr('SyntaxError','invalid syntax','Выражение оборвалось — чего-то не хватает.',line);
+if(t.k==='num')return t.f?F(t.v):I(t.v);
+if(t.k==='str')return S(t.v);
+if(t.k==='op'&&t.v==='('){
+const v=expr();
+if(isOp(',')){const items=[v];while(isOp(',')){next();items.push(expr());}expect(')');return L(items);}
+expect(')');return v;
+}
+if(t.k==='op'&&t.v==='['){
+const items=[];
+if(!isOp(']')){items.push(expr());while(isOp(',')){next();if(isOp(']'))break;items.push(expr());}}
+expect(']');return L(items);
+}
+if(t.k==='name'){
+if(isOp('(')){const ca=callArgs();return callExpr(t.v,ca.args,ctx,line);}
+if(Object.prototype.hasOwnProperty.call(ctx.env,t.v))return ctx.env[t.v];
+if(t.v==='True')return B(true); if(t.v==='False')return B(false);
+throw nameErr(t.v,ctx,line,true);
+}
+throw new PyErr('SyntaxError','invalid syntax','Здесь стоит лишний знак.',line);
+}
+return { expr, peek, next, isOp, expect, callArgs, done:()=>p>=toks.length, rest:()=>toks.slice(p) };
+}
+function nameErr(name,ctx,line,inExpr){
+const low=name.toLowerCase();
+let hint;
+if(name!==low&&ALLNAMES.includes(low))hint=`Python различает заглавные и строчные буквы! Пиши ${low} с маленькой буквы.`;
+else if(TURTLE[name]&&!ctx.turtle)hint='Сначала подключи черепашку: from turtle import *';
+else if(inExpr)hint=`Если «${name}» — это текст, возьми его в кавычки: '${name}'`;
+else hint='Python не знает такой команды. Проверь, нет ли опечатки.';
+return new PyErr('NameError',`name '${name}' is not defined`,hint,line);
+}
+function callExpr(name,args,ctx,line){
+if(name==='range'){
+const n=args.map(a=>{if(a.t!=='int')throw new PyErr('TypeError','range() needs integers','В range() пишут целые числа: range(4)',line);return a.v;});
+let[a,b,c]=n.length===1?[0,n[0],1]:n.length===2?[n[0],n[1],1]:n;
+if(!c)throw new PyErr('ValueError','range() arg 3 must not be zero','',line);
+const out=[];for(let i=a;c>0?i<b:i>b;i+=c){out.push(i);if(out.length>100000)break;}
+return {t:'range',v:out};
+}
+if(name==='len'){const a=args[0];if(!a||!(a.t==='str'||a.t==='list'))throw new PyErr('TypeError','len() needs str or list','',line);return I([...a.v].length);}
+if(name==='str')return S(args[0]?toStr(args[0]):'');
+if(name==='int'){
+const a=args[0];if(!a)return I(0);
+if(isNum(a))return I(Math.trunc(a.v));
+if(a.t==='bool')return I(a.v?1:0);
+if(a.t==='str'&&/^\s*[-+]?\d+\s*$/.test(a.v))return I(parseInt(a.v,10));
+throw new PyErr('ValueError',`invalid literal for int(): '${a.v}'`,'Это не похоже на целое число.',line);
+}
+if(name==='abs'){const a=args[0];return a.t==='int'?I(Math.abs(a.v)):F(Math.abs(a.v));}
+if(name==='round'){const a=args[0];return I(Math.round(a.v));}
+if(name==='input'){
+const pr=args.length?toStr(args[0]):'';
+if(pr)ctx.out.push({t:'out',v:pr});
+const v=ctx.inp.length?String(ctx.inp.shift()):'';
+return S(v);
+}
+if(name==='print'||TURTLE[name])throw new PyErr('SyntaxError','invalid syntax',`${name}() — это команда. Пиши её в отдельной строке.`,line);
+throw nameErr(name,ctx,line,false);
+}
+function num(a,cmd,line){
+if(!a)throw new PyErr('TypeError',`${cmd}() missing 1 required positional argument: '${ARGNAME[TURTLE[cmd]]||'x'}'`,`Внутри скобок нужно число: ${cmd}(90)`,line);
+if(!isNum(a))throw new PyErr('TypeError',`${cmd}() argument must be a number, not '${TYPE(a)}'`,'Число пишется без кавычек: forward(150), а не forward(\'150\').',line);
+return a.v;
+}
+function validColor(c){ if(typeof CSS!=='undefined'&&CSS.supports)return CSS.supports('color',c); return /^[a-z]+$|^#[0-9a-f]{3,8}$/i.test(c); }
+function callStmt(name,args,ctx,line,kwargs){
+kwargs=kwargs||{};
+if(name==='print'){ctx.out.push({t:'out',v:args.map(toStr).join(' ')});return;}
+const op=TURTLE[name];
+if(op){
+if(!ctx.turtle)throw nameErr(name,ctx,line,false);
+const C=ctx.cmds;
+switch(op){
+case 'fd': C.push({op:'fd',v:num(args[0],name,line),line}); break;
+case 'bk': C.push({op:'fd',v:-num(args[0],name,line),line}); break;
+case 'lt': C.push({op:'turn',v:num(args[0],name,line),line}); break;
+case 'rt': C.push({op:'turn',v:-num(args[0],name,line),line}); break;
+case 'seth': C.push({op:'seth',v:num(args[0],name,line),line}); break;
+case 'width': C.push({op:'width',v:num(args[0],name,line),line}); break;
+case 'speed': { const a=args[0]; let v=3; if(a&&isNum(a))v=a.v; else if(a&&a.t==='str')v=({fastest:0,fast:10,normal:6,slow:3,slowest:1})[a.v]??3; C.push({op:'speed',v,line}); break; }
+case 'up': C.push({op:'up',line}); break;
+case 'down': C.push({op:'down',line}); break;
+case 'hide': C.push({op:'hide',line}); break;
+case 'show': C.push({op:'show',line}); break;
+case 'begin': C.push({op:'begin',line}); break;
+case 'end': C.push({op:'end',line}); break;
+case 'home': C.push({op:'goto',x:0,y:0,line},{op:'seth',v:0,line}); break;
+case 'goto': {
+let x,y;
+if(args.length===1&&args[0].t==='list'){x=args[0].v[0];y=args[0].v[1];}else{x=args[0];y=args[1];}
+if(!x||!y)throw new PyErr('TypeError','goto() missing argument','Нужны две координаты: goto(100, 50)',line);
+C.push({op:'goto',x:num(x,name,line),y:num(y,name,line),line}); break;
+}
+case 'fillcolor': case 'color': {
+const a=args[0];
+if(!a)break;
+if(a.t!=='str')throw new PyErr('TurtleGraphicsError',`bad color string: ${toStr(a)}`,"Цвет пишется в кавычках: color('red')",line);
+if(!validColor(a.v))throw new PyErr('TurtleGraphicsError',`bad color string: ${a.v}`,"Черепашка не знает такого цвета. Попробуй 'red', 'blue', 'green', 'black', 'orange', 'purple', 'yellow'.",line);
+C.push({op:op==='color'?'color':'fillcolor',v:a.v,line}); break;
+}
+case 'circle': {
+const r=num(args[0],name,line);
+const ext=args[1]?num(args[1],name,line):360;
+const frac=Math.abs(ext)/360;
+const steps=1+Math.floor(Math.min(11+Math.abs(r)/6,59)*frac);
+let w=ext/steps,w2=w/2,l=2*r*Math.sin(w2*Math.PI/180);
+if(r<0){l=-l;w=-w;w2=-w2;}
+C.push({op:'turn',v:w2,line,q:1});
+for(let i=0;i<steps;i++){C.push({op:'fd',v:l,line,q:1});C.push({op:'turn',v:w,line,q:1});}
+C.push({op:'turn',v:-w2,line,q:1});
+break;
+}
+case 'write': {
+const a0=args[0];
+if(!a0)throw new PyErr('TypeError','write() missing argument','Внутри write() нужен текст в кавычках: write(\'Привет!\')',line);
+if(a0.t!=='str')throw new PyErr('TypeError','write() needs a string','Текст для write() нужно собрать в строку: write(\'Ответ: \' + str(result))',line);
+let size=18,font='Arial',style='normal';
+const fa=args.length>1?args[1]:kwargs.font;
+if(fa){
+if(fa.t==='list'){
+const f=fa.v;
+if(f[0]&&f[0].t==='str')font=f[0].v;
+if(f[1]&&isNum(f[1]))size=f[1].v;
+if(f[2]&&f[2].t==='str')style=f[2].v;
+} else if(isNum(fa))size=fa.v;
+}
+if(size<6)size=6; if(size>72)size=72;
+C.push({op:'write',v:a0.v,size,font,style,line});
+break;
+}
+default: break;
+}
+if(C.length>60000)throw new PyErr('RuntimeError','слишком много команд','Черепашка устала: уменьши число повторений.',line);
+return;
+}
+throw nameErr(name,ctx,line,false);
+}
+function build(src){
+const items=[];
+src.replace(/\r/g,'').split('\n').forEach((raw,i)=>{
+const t=raw.replace(/\s+$/,'');
+if(!t.trim()||t.trim().startsWith('#'))return;
+const ind=t.match(/^[ \t]*/)[0].replace(/\t/g,'    ').length;
+items.push({i,ind,text:t.trim()});
+});
+let p=0;
+function block(ind){
+const out=[];
+while(p<items.length){
+const it=items[p];
+if(it.ind<ind)break;
+if(it.ind>ind)throw new PyErr('IndentationError','unexpected indent','Убери лишние пробелы в начале строки — команда должна начинаться с самого края.',it.i);
+p++;
+const node={line:it.i,text:it.text};
+if(/^(elif)\b/.test(it.text))throw new PyErr('SyntaxError','invalid syntax','elif пока не нужен: хватит двух отдельных блоков if — if ... и if ...',it.i);
+if(/^if\b/.test(it.text)){
+node.type='if';
+let src2=it.text;const h=src2.indexOf('#');if(h>=0)src2=src2.slice(0,h);src2=src2.replace(/\s+$/,'');
+if(!/:$/.test(src2))throw new PyErr('SyntaxError',"expected ':'",'В конце строки с if нужно двоеточие, например: if rain == \'да\':',it.i);
+const cond=src2.replace(/^if\s*/,'').replace(/:$/,'').trim();
+if(!cond)throw new PyErr('SyntaxError','missing condition','После if напиши условие, например: if rain == \'да\':',it.i);
+node.cond=cond;
+const nx=items[p];
+if(!nx||nx.ind<=ind)throw new PyErr('IndentationError','expected an indented block','Команды внутри if пишутся с отступом в 4 пробела.',nx?nx.i:it.i);
+node.body=block(nx.ind);
+if(p<items.length&&items[p].ind===ind&&/^else\b/.test(items[p].text)){
+const ei=items[p].i;
+let es=items[p].text.replace(/\s+$/,'');
+if(!/:$/.test(es))throw new PyErr('SyntaxError',"expected ':'",'В конце строки с else нужно двоеточие: else:',ei);
+p++;
+const nx2=items[p];
+if(!nx2||nx2.ind<=ind)throw new PyErr('IndentationError','expected an indented block','Команды внутри else пишутся с отступом в 4 пробела.',nx2?nx2.i:ei);
+node.elseBody=block(nx2.ind);
+}
+}
+if(/^for\b/.test(it.text)){
+node.type='for';
+const nx=items[p];
+if(!nx||nx.ind<=ind)throw new PyErr('IndentationError','expected an indented block','Команды внутри цикла пишутся с отступом в 4 пробела.',nx?nx.i:it.i);
+node.body=block(nx.ind);
+}
+out.push(node);
+}
+return out;
+}
+return block(0);
+}
+function runNode(n,ctx){
+if(++ctx.steps>200000)throw new PyErr('RuntimeError','программа работает слишком долго','Уменьши число повторений.',n.line);
+if(n.type==='if'){
+const P=parser(tokenize(n.cond,n.line),ctx,n.line);
+const c=P.expr();
+if(!P.done())throw new PyErr('SyntaxError','invalid syntax','В строке с if — только условие и двоеточие.',n.line);
+if(truthy(c)){for(const b of n.body)runNode(b,ctx);}
+else if(n.elseBody){for(const b of n.elseBody)runNode(b,ctx);}
+return;
+}
+const toks=tokenize(n.text,n.line);
+if(!toks.length)return;
+const v0=toks[0].k==='name'?toks[0].v:null;
+if(n.type==='for'){
+if(!(toks[1]&&toks[1].k==='name'&&toks[2]&&toks[2].v==='in'))throw new PyErr('SyntaxError','invalid syntax','Цикл пишется так: for i in range(4):',n.line);
+const last=toks[toks.length-1];
+if(!(last.k==='op'&&last.v===':'))throw new PyErr('SyntaxError',"expected ':'",'В конце строки с for нужно двоеточие.',n.line);
+const P=parser(toks.slice(3,-1),ctx,n.line);
+const it=P.expr();
+if(!P.done())throw new PyErr('SyntaxError','invalid syntax','',n.line);
+let seq;
+if(it.t==='range')seq=it.v.map(I);
+else if(it.t==='list')seq=it.v;
+else if(it.t==='str')seq=[...it.v].map(S);
+else throw new PyErr('TypeError',`'${TYPE(it)}' object is not iterable`,'После in обычно пишут range(число).',n.line);
+for(const v of seq){ctx.env[toks[1].v]=v;for(const b of n.body)runNode(b,ctx);}
+return;
+}
+if(v0==='from'){
+const txt=toks.map(t=>t.v).join(' ');
+if(txt==='from turtle import *'){ctx.turtle=true;return;}
+if(toks[1]&&toks[1].v!=='turtle')throw new PyErr('ModuleNotFoundError',`No module named '${toks[1].v}'`,'Модуль черепашки называется turtle.',n.line);
+if(toks[1]&&toks[1].v==='turtle'&&txt.startsWith('from turtle import')){ctx.turtle=true;return;}
+throw new PyErr('SyntaxError','invalid syntax','Подключение пишется так: from turtle import *',n.line);
+}
+if(v0==='import'){
+if(toks[1]&&toks[1].v==='turtle'){ctx.turtle=true;return;}
+throw new PyErr('ModuleNotFoundError',`No module named '${toks[1]?toks[1].v:''}'`,'',n.line);
+}
+if(v0&&toks[1]&&toks[1].k==='op'&&toks[1].v==='='){
+if(ALLNAMES.includes(v0))throw new PyErr('SyntaxError','invalid syntax',`«${v0}» — имя команды. Скобки забыл? ${v0}(...)`,n.line);
+const P=parser(toks.slice(2),ctx,n.line);
+const val=P.expr();
+if(!P.done())throw new PyErr('SyntaxError','invalid syntax','',n.line);
+ctx.env[v0]=val;return;
+}
+if(!v0)throw new PyErr('SyntaxError','invalid syntax','Строка должна начинаться с команды, например print(...).',n.line);
+let k=0,name=v0;
+if(name==='turtle'&&toks[1]&&toks[1].v==='.'&&toks[2]&&toks[2].k==='name'){name=toks[2].v;k=2;}
+if(!(toks[k+1]&&toks[k+1].k==='op'&&toks[k+1].v==='(')){
+if(toks.length===k+1){
+if(ALLNAMES.includes(name))throw new PyErr('SyntaxError','missing parentheses',`После имени команды нужны скобки: ${name}()`,n.line);
+throw nameErr(name,ctx,n.line,false);
+}
+if(ALLNAMES.includes(name)||ALLNAMES.includes(name.toLowerCase()))throw new PyErr('SyntaxError',`Missing parentheses in call to '${name}'`,`После имени команды нужны скобки: ${name}(${toks.slice(k+1).map(t=>t.k==='str'?"'"+t.v+"'":t.v).join(' ')})`,n.line);
+throw new PyErr('SyntaxError','invalid syntax','Python не понял эту строку. Команды пишутся так: имя(значение).',n.line);
+}
+if(!(name==='print'||TURTLE[name]))throw nameErr(name,ctx,n.line,false);
+if(TURTLE[name]&&!ctx.turtle)throw nameErr(name,ctx,n.line,false);
+const P=parser(toks.slice(k+1),ctx,n.line);
+const ca=P.callArgs();
+if(!P.done())throw new PyErr('SyntaxError','invalid syntax','Каждая команда пишется на отдельной строке.',n.line);
+callStmt(name,ca.args,ctx,n.line,ca.kwargs);
+}
+function run(src,opt={}){
+const ctx={env:{},out:[],cmds:[],turtle:!!opt.turtle,steps:0,inp:(opt.inputs||[]).slice()};
+let error=null;
+try{
+const prog=build(src);
+for(const n of prog)runNode(n,ctx);
+}catch(e){
+if(e instanceof PyErr)error={type:e.type,msg:e.message,hint:e.hint,line:e.line};
+else error={type:'Error',msg:String(e&&e.message||e),hint:'',line:null};
+}
+return {out:ctx.out.map(o=>o.v),cmds:ctx.cmds,error,turtle:ctx.turtle};
+}
+return {run};
+})();
+/* ===== Холст черепашки (с заливкой и write) ===== */
+class TurtleCanvas{
+constructor(wrap,opt={}){
+this.W=opt.w||500;this.H=opt.h||400;this.cell=opt.cell||25;
+this.base=opt.speed||1;this.onLine=opt.onLine||null;
+this.wrap=wrap;
+wrap.classList.add('tc');
+wrap.style.aspectRatio=this.W+' / '+this.H;
+wrap.style.maxWidth=`min(100%, calc(56vh * ${this.W/this.H}))`;
+wrap.style.marginInline='auto';
+this.cv=document.createElement('canvas');wrap.appendChild(this.cv);
+this.badge=document.createElement('div');this.badge.className='tc-badge';wrap.appendChild(this.badge);
+this.ink=document.createElement('canvas');
+this.gridCv=document.createElement('canvas');
+this.ctx=this.cv.getContext('2d');
+this.reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+this.reset();
+this.ro=new ResizeObserver(()=>this.resize());this.ro.observe(wrap);
+}
+resize(){
+const w=this.wrap.clientWidth;if(!w)return;
+const h=w*this.H/this.W,d=Math.min(window.devicePixelRatio||1,2);
+this.sc=w/this.W;this.d=d;
+for(const c of[this.cv,this.ink,this.gridCv]){c.width=Math.round(w*d);c.height=Math.round(h*d);}
+this.cv.style.width=w+'px';this.cv.style.height=h+'px';
+this.drawGrid();this.redrawInk();this.draw();
+}
+P(x,y){return[(x+this.W/2)*this.sc*this.d,(this.H/2-y)*this.sc*this.d];}
+drawGrid(){
+const g=this.gridCv.getContext('2d'),W=this.gridCv.width,H=this.gridCv.height;
+g.fillStyle='#fbfaff';g.fillRect(0,0,W,H);
+const step=this.cell*this.sc*this.d;const[ox,oy]=this.P(0,0);
+g.lineWidth=1*this.d;g.strokeStyle='rgba(108,96,180,0.13)';
+g.beginPath();
+for(let x=ox%step;x<=W;x+=step){g.moveTo(Math.round(x)+.5,0);g.lineTo(Math.round(x)+.5,H);}
+for(let y=oy%step;y<=H;y+=step){g.moveTo(0,Math.round(y)+.5);g.lineTo(W,Math.round(y)+.5);}
+g.stroke();
+g.strokeStyle='rgba(108,96,180,0.30)';g.beginPath();
+g.moveTo(ox,0);g.lineTo(ox,H);g.moveTo(0,oy);g.lineTo(W,oy);g.stroke();
+}
+reset(){
+this.gen=(this.gen||0)+1;
+Object.assign(this,{x:0,y:0,h:0,pen:true,col:'#15132b',wid:3,vis:true,mult:1,q:[],segs:[],cur:null,running:false,filling:false,fpts:[],fills:[],fillCol:null});
+if(this.ink.width)this.ink.getContext('2d').clearRect(0,0,this.ink.width,this.ink.height);
+if(this._res){this._res();this._res=null;}
+this.draw();
+}
+fillInk(f){
+const g=this.ink.getContext('2d');
+g.fillStyle=f.col;g.beginPath();
+f.pts.forEach((p,i)=>{const[x,y]=this.P(p[0],p[1]);i?g.lineTo(x,y):g.moveTo(x,y);});
+g.closePath();g.fill();
+}
+redrawInk(){
+const g=this.ink.getContext('2d');g.clearRect(0,0,this.ink.width,this.ink.height);
+for(const f of this.fills)this.fillInk(f);
+for(const s of this.segs)this.seg(g,s);
+}
+seg(g,s){
+const[a,b]=this.P(s.x1,s.y1),[c,d]=this.P(s.x2,s.y2);
+g.strokeStyle=s.col;g.lineWidth=Math.max(1,s.w*this.sc)*this.d;g.lineCap='round';g.lineJoin='round';
+g.beginPath();g.moveTo(a,b);g.lineTo(c,d);g.stroke();
+}
+play(cmds,opt={}){
+if(opt.onLine!==undefined)this.onLine=opt.onLine;
+for(const c of cmds)this.q.push(Object.assign({},c));
+return new Promise(res=>{
+const prev=this._res;this._res=()=>{if(prev)prev();res();};
+if(!this.running){this.running=true;this.last=performance.now();const g=this.gen;requestAnimationFrame(t=>this.tick(t,g));}
+});
+}
+tick(t,g){
+if(g!==this.gen)return;
+let dt=Math.min(64,t-this.last);this.last=t;
+if(this.reduce)dt=1e9;
+this.step(dt);
+this.draw();
+if(this.q.length)requestAnimationFrame(tt=>this.tick(tt,g));
+else{this.running=false;if(this.onLine)this.onLine(null);const r=this._res;this._res=null;if(r)r();}
+}
+rates(){const m=this.base*this.mult;return{mv:0.24*m,tr:0.45*m};}
+step(dt){
+let t=dt;
+while(t>0&&this.q.length){
+const c=this.q[0];
+if(!c._s){
+c._s=1;c._p=0;
+if(this.onLine&&!c.q)this.onLine(c.line);
+else if(this.onLine&&c.q&&c.line!==this._lastLine)this.onLine(c.line);
+this._lastLine=c.line;
+if(c.op==='fd'){const r=this.h*Math.PI/180;c.sx=this.x;c.sy=this.y;c.tx=this.x+Math.cos(r)*c.v;c.ty=this.y+Math.sin(r)*c.v;c.tot=Math.abs(c.v);}
+else if(c.op==='goto'){c.sx=this.x;c.sy=this.y;c.tx=c.x;c.ty=c.y;c.tot=Math.hypot(c.x-this.x,c.y-this.y);}
+else if(c.op==='turn'){c.sh=this.h;c.tot=Math.abs(c.v);}
+else{
+if(c.op==='color')this.col=c.v;
+else if(c.op==='fillcolor')this.fillCol=c.v;
+else if(c.op==='width')this.wid=c.v;
+else if(c.op==='up')this.pen=false;
+else if(c.op==='down')this.pen=true;
+else if(c.op==='hide')this.vis=false;
+else if(c.op==='show')this.vis=true;
+else if(c.op==='seth')this.h=c.v;
+else if(c.op==='begin'){this.filling=true;this.fpts=[[this.x,this.y]];}
+else if(c.op==='end'){if(this.filling&&this.fpts.length>2){const f={pts:this.fpts.slice(),col:this.fillCol||this.col};this.fills.push(f);this.fillInk(f);}this.filling=false;this.fpts=[];}
+else if(c.op==='speed')this.mult=c.v===0?40:Math.max(0.3,c.v/3);
+else if(c.op==='write')this._write(c);
+this.q.shift();continue;
+}
+}
+const R=this.rates(),rate=c.op==='turn'?R.tr:R.mv;
+const need=(c.tot-c._p)/rate;
+if(need<=t){
+t-=need;c._p=c.tot;
+if(c.op==='turn')this.h=c.sh+c.v;
+else{this.x=c.tx;this.y=c.ty;if(this.pen&&c.tot>0){const s={x1:c.sx,y1:c.sy,x2:c.tx,y2:c.ty,col:this.col,w:this.wid};this.segs.push(s);this.seg(this.ink.getContext('2d'),s);}if(this.filling)this.fpts.push([this.x,this.y]);}
+this.cur=null;this.q.shift();
+}else{
+c._p+=rate*t;t=0;
+const f=c._p/c.tot;
+if(c.op==='turn')this.h=c.sh+Math.sign(c.v)*c._p;
+else{this.x=c.sx+(c.tx-c.sx)*f;this.y=c.sy+(c.ty-c.sy)*f;this.cur=this.pen?{x1:c.sx,y1:c.sy,x2:this.x,y2:this.y,col:this.col,w:this.wid}:null;}
+}
+}
+}
+_write(c){
+if(!this.ink.width||!this.d)return;
+const g=this.ink.getContext('2d');
+const[px,py]=this.P(this.x,this.y);
+g.save();
+g.translate(px,py);
+g.scale(this.sc*this.d,this.sc*this.d);
+g.fillStyle=this.col;
+g.font=(c.style==='bold'?'bold ':c.style==='italic'?'italic ':'')+c.size+'px "'+c.font+'", Arial, sans-serif';
+g.textBaseline='middle';
+g.fillText(c.v,0,0);
+g.restore();
+}
+draw(){
+const g=this.ctx;if(!this.cv.width)return;
+g.clearRect(0,0,this.cv.width,this.cv.height);
+g.drawImage(this.gridCv,0,0);g.drawImage(this.ink,0,0);
+if(this.cur)this.seg(g,this.cur);
+if(this.vis)this.sprite(g);
+const hh=((Math.round(this.h)%360)+360)%360;
+this.badge.textContent=`X: ${Math.round(this.x)} | Y: ${Math.round(this.y)} | Угол: ${hh}°`;
+}
+sprite(g){
+const[px,py]=this.P(this.x,this.y),k=Math.max(0.8,Math.min(1.5,this.sc*1.3))*this.d;
+g.save();g.translate(px,py);g.rotate(-this.h*Math.PI/180);g.scale(k,k);
+g.fillStyle='#1f8f55';
+for(const[lx,ly]of[[6,8],[6,-8],[-6,8],[-6,-8]]){g.beginPath();g.ellipse(lx,ly,3.6,2.6,0,0,Math.PI*2);g.fill();}
+g.beginPath();g.moveTo(-11,0);g.lineTo(-15,2);g.lineTo(-15,-2);g.closePath();g.fill();
+g.fillStyle='#41c47a';g.beginPath();g.arc(13,0,4.6,0,Math.PI*2);g.fill();
+g.fillStyle='#15132b';g.beginPath();g.arc(15,-2,1,0,Math.PI*2);g.arc(15,2,1,0,Math.PI*2);g.fill();
+const gr=g.createRadialGradient(-2,-3,1,0,0,11);gr.addColorStop(0,'#6fe0a0');gr.addColorStop(1,'#1f9a5a');
+g.fillStyle=gr;g.strokeStyle='#167043';g.lineWidth=1.4;
+g.beginPath();g.ellipse(0,0,10.5,8.5,0,0,Math.PI*2);g.fill();g.stroke();
+g.strokeStyle='rgba(255,255,255,.55)';g.lineWidth=1;
+g.beginPath();g.ellipse(0,0,5,4,0,0,Math.PI*2);g.stroke();
+g.fillStyle=this.col;g.beginPath();g.arc(0,0,2,0,Math.PI*2);g.fill();
+g.restore();
+}
+}
+</script>
+<script>
+/* ===== утилиты ===== */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function hl(src){
+const re=/(#[^\n]*)|('(?:[^'\\\n]|\\.)*'?|"(?:[^"\\\n]|\\.)*"?)|\b(from|import|for|in|range|if|else|while|def|return|print|input|int|str|float|len|abs|round|True|False)\b|([A-Za-z_][A-Za-z0-9_]*)(?=\s*\()|(\b\d+(?:\.\d+)?\b)|([+\-*\/%=<>!]+)/g;
+let out='',last=0,m;
+while((m=re.exec(src))){
+out+=esc(src.slice(last,m.index));
+const[t,com,str,kw,fn,num,op]=m;
+out+=com?`<span class="k-com">${esc(t)}</span>`:str?`<span class="k-str">${esc(t)}</span>`:kw?`<span class="k-kw">${esc(t)}</span>`:fn?`<span class="k-fn">${esc(t)}</span>`:num?`<span class="k-num">${esc(t)}</span>`:`<span class="k-op">${esc(t)}</span>`;
+last=m.index+t.length;
+}
+return out+esc(src.slice(last));
+}
+const hlLines=src=>src.split('\n').map((l,i)=>`<span class="ln" data-l="${i}">${hl(l)||' '}</span>`).join('');
+const codeBox=(src,fn='',opt={})=>`<div class="code ${opt.cls||''}"><div class="code-top"><div class="dots"><i></i><i></i><i></i></div>${opt.title?`<span class="ttl">${esc(opt.title)}</span>`:''}<span class="fn">${esc(fn)}</span></div><pre class="${opt.pre||''}">${opt.lines?hlLines(src):hl(src)}</pre>${opt.after||''}</div>`;
+function termHTML(res,opt={}){
+let h='';
+if(opt.echo)h+=`<span class="muted">$ python3 main.py</span>\n`;
+if(res.out.length)h+=res.out.map(l=>`<span class="p">&gt;</span>${esc(l)}`).join('\n');
+if(res.error){
+if(res.out.length)h+='\n';
+const ln=res.error.line!=null?`Строка ${res.error.line+1}: `:'';
+h+=`<span class="err">${esc(ln+res.error.type+': '+res.error.msg)}</span>${res.error.hint?`<span class="hint">💡 ${esc(res.error.hint)}</span>`:''}`;
+}
+if(!res.out.length&&!res.error)h+=`<span class="muted">${opt.empty||'(программа ничего не напечатала)'}</span>`;
+return h;
+}
+let toastT;
+function toast(msg){let t=$('.toast');if(!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t);}t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2400);}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function confetti(){
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+const cv=$('#confetti'),g=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
+const cols=['#7b5cff','#ff6fb0','#ffcf4a','#3fd7a6','#5fc3ff','#ff8a3d'];
+const ps=Array.from({length:160},()=>({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.55,vx:(Math.random()-.5)*16,vy:-Math.random()*18-6,r:Math.random()*6+4,c:cols[Math.random()*6|0],a:Math.random()*6,va:(Math.random()-.5)*.4}));
+let f=0;
+(function fr(){
+g.clearRect(0,0,cv.width,cv.height);
+ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.5;p.vx*=.99;p.a+=p.va;g.save();g.translate(p.x,p.y);g.rotate(p.a);g.fillStyle=p.c;g.fillRect(-p.r/2,-p.r/2,p.r,p.r*.6);g.restore();});
+if(++f<150)requestAnimationFrame(fr);else g.clearRect(0,0,cv.width,cv.height);
+})();
+}
+/* ===== демо-блок: код + (ввод пользователя) + вопрос + терминал + (холст) ===== */
+function pyDemo(root,cfg){
+let code=cfg.tabs?cfg.tabs[0].code:cfg.code;
+root.innerHTML=`<div class="split">
+<div class="body">
+${cfg.tabs?`<div class="seg" role="tablist">${cfg.tabs.map((t,i)=>`<button aria-pressed="${i===0}" data-t="${i}">${esc(t.name)}</button>`).join('')}</div>`:''}
+<div data-code></div>
+${cfg.inputs?`<div class="island" style="padding:14px 16px"><div class="card-t" style="margin:0 0 6px">👤 Пользователь вводит:</div>${cfg.inputs.map((p,i)=>{const lbl=Array.isArray(p)?p[0]:p,val=Array.isArray(p)?p[1]:'';return `<label class="fld"><span>${esc(lbl)}</span><input data-in="${i}" value="${esc(val)}" placeholder="введи значение…"></label>`;}).join('')}</div>`:''}
+<div class="row"><button class="btn" data-run>▶ Запустить</button><button class="btn ghost icon" data-reset title="Сбросить">↺</button></div>
+${cfg.tip?`<div class="praise">💡 ${esc(cfg.tip)}</div>`:''}
+</div>
+<div class="body">
+${cfg.question?`<div class="island" style="padding:14px 16px"><div class="card-t" style="margin:0 0 10px">🤔 ${esc(cfg.question.q)}</div><div class="places">${cfg.question.opts.map((o,i)=>`<button class="btn ghost sm" data-q="${i}">${esc(o)}</button>`).join('')}</div><div data-why style="margin-top:12px"></div></div>`:''}
+<div class="term" data-term><span class="muted">Нажми «▶ Запустить», чтобы увидеть ответ компьютера.</span></div>
+${cfg.turtle?`<div data-tc style="margin-top:4px"></div>`:''}
+</div></div>`;
+const codeEl=$('[data-code]',root),term=$('[data-term]',root);
+const showCode=()=>{codeEl.innerHTML=codeBox(code,cfg.fn||'main.py',{lines:true});};
+showCode();
+let T=null;
+if(cfg.turtle){T=new TurtleCanvas($('[data-tc]',root),cfg.turtleOpt||{w:420,h:320,speed:1.6});root._cleanup=()=>T.reset();}
+const run=()=>{
+const res=PY.run(code,{inputs:$$('[data-in]',root).map(i=>i.value),turtle:!!cfg.turtle});
+term.innerHTML=termHTML(res,{echo:true});
+if(T){T.reset();if(!res.error&&res.cmds.length)T.play(res.cmds);}
+};
+root.addEventListener('click',e=>{
+const tb=e.target.closest('[data-t]');
+if(tb&&cfg.tabs){code=cfg.tabs[+tb.dataset.t].code;$$('.seg button',root).forEach(b=>b.setAttribute('aria-pressed',b===tb));showCode();term.innerHTML='<span class="muted">Нажми «▶ Запустить», чтобы увидеть ответ компьютера.</span>';if(T)T.reset();return;}
+if(e.target.closest('[data-run]')){run();return;}
+if(e.target.closest('[data-reset]')){term.innerHTML='<span class="muted">Нажми «▶ Запустить», чтобы увидеть ответ компьютера.</span>';if(T)T.reset();$$('[data-in]',root).forEach(i=>{const p=cfg.inputs[+i.dataset.i];i.value=Array.isArray(p)?p[1]:'';});return;}
+const q=e.target.closest('[data-q]');
+if(q&&cfg.question){
+const i=+q.dataset.q,ok=i===cfg.question.ok;
+$$('[data-q]',root).forEach(b=>b.classList.toggle('pick-bad',b===q&&!ok));
+$('[data-why]',root).innerHTML=`<div class="reply ${ok?'ok':'no'} reveal"><span style="font-size:44px">${ok?'🎉':'🤔'}</span><div><b>${ok?'Верно!':'Не совсем.'}</b> ${cfg.question.why}</div></div>`;
+if(ok)confetti();
+}
+});
+if(cfg.autorun)run();
+}
+/* ===== редактируемая лаборатория: код + ввод + терминал + (холст) ===== */
+function codeLab(root,cfg){
+root.innerHTML=`<div class="code lab">
+<div class="code-top"><div class="dots"><i></i><i></i><i></i></div><span class="ttl">&gt;_ ${esc(cfg.title||'Калькулятор')}</span></div>
+<div class="lab-grid">
+<div class="lab-col"><h4>Редактор кода Python: <small>${esc(cfg.edHint||'меняй код!')}</small></h4>
+<textarea class="editor" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Редактор кода"></textarea></div>
+<div class="lab-col">
+${cfg.inputs?`<h4>👤 Ввод пользователя:</h4>${cfg.inputs.map((p,i)=>`<label class="fld"><span>${esc(p)}</span><input data-in="${i}" value="${esc(cfg.defaults&&cfg.defaults[i]!=null?cfg.defaults[i]:'')}"></label>`).join('')}`:''}
+<h4 class="o">✨ Экран вывода:</h4><div class="term"></div>
+${cfg.turtle?`<div data-tc style="margin-top:10px"></div>`:''}
+</div>
+</div>
+<div class="lab-foot"><div class="row" style="width:100%"><button class="btn" data-run style="flex:1">▶ Запустить</button><button class="btn ghost icon" data-reset title="Вернуть пример">↺</button></div>
+<div class="lab-tip"><span class="emj" style="font-size:28px">💡</span><span>${esc(cfg.tip||'')}</span></div></div></div>`;
+const ed=$('textarea',root),term=$('.term',root);
+const start=cfg.code;
+let T=null;
+if(cfg.turtle){T=new TurtleCanvas($('[data-tc]',root),cfg.turtleOpt||{w:440,h:280,speed:1.8});root._cleanup=()=>T.reset();}
+const clear=()=>{term.innerHTML='<span class="muted">Нажми «▶ Запустить», чтобы увидеть ответ компьютера.</span>';};
+const runIt=()=>{
+const res=PY.run(ed.value,{inputs:$$('[data-in]',root).map(i=>i.value),turtle:!!cfg.turtle});
+term.innerHTML=termHTML(res);
+if(T){T.reset();if(!res.error&&res.cmds.length)T.play(res.cmds);}
+};
+ed.value=start;clear();
+ed.addEventListener('keydown',e=>{
+if(e.key==='Tab'){e.preventDefault();const s=ed.selectionStart;ed.setRangeText('    ',s,ed.selectionEnd,'end');}
+if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();runIt();}
+});
+root.addEventListener('click',e=>{
+if(e.target.closest('[data-run]'))runIt();
+if(e.target.closest('[data-reset]')){ed.value=start;clear();if(T)T.reset();$$('[data-in]',root).forEach(i=>i.value=cfg.defaults?cfg.defaults[+i.dataset.in]||'':'');}
+});
+}
+/* ===== игра «расставь шаги по порядку» ===== */
+function orderGame(root,steps,praiseTxt){
+const seq=[];
+root.innerHTML=`<div class="split">
+<div class="body"><p class="lead" style="margin:0">Нажимай шаги в правильном порядке!</p><div class="steps" data-pool></div></div>
+<div class="body"><div class="slots" data-slots>${steps.map((s,k)=>`<div class="slot"><span class="no">${k+1}</span><span>…</span></div>`).join('')}</div><div class="praise" data-msg hidden style="margin-top:14px"></div></div></div>`;
+$('[data-pool]',root).innerHTML=shuffle(steps.map((s,i)=>i)).map(i=>`<button class="stepbtn" data-i="${i}"><span class="emj" style="font-size:30px;text-align:left">${steps[i][0]}</span>${esc(steps[i][1])}</button>`).join('');
+root.addEventListener('click',e=>{
+const b=e.target.closest('.stepbtn');if(!b||b.disabled)return;
+const i=+b.dataset.i;
+if(i===seq.length){
+seq.push(i);b.disabled=true;
+const s=$$('[data-slots] .slot',root)[seq.length-1];
+s.classList.add('f');s.innerHTML=`<span class="no">${seq.length}</span><span class="emj" style="font-size:28px">${steps[i][0]}</span>${esc(steps[i][1])}`;
+if(seq.length===steps.length){
+$('[data-slots]',root).classList.add('ok');
+const m=$('[data-msg]',root);m.hidden=false;m.textContent='🎉 '+praiseTxt;confetti();
+}
+}else{
+b.classList.add('flash');setTimeout(()=>b.classList.remove('flash'),350);
+}
+});
+}
+/* ===== блиц-опрос ===== */
+let blitzCoins=0;
+const blitzRevealed=new Set();
+function bumpCoin(el,idx){
+if(blitzRevealed.has(idx))return;
+blitzRevealed.add(idx);blitzCoins++;
+const c=$('[data-coin]',el);
+if(c)c.textContent=`⭐ Монетки: ${blitzCoins}/8`;
+}
+const BLITZ=[
+{topic:'print',type:'one',q:'Что напечатает эта команда?',code:"print('5' * 3)",opts:['15','555','5 5 5','Ошибка'],ok:[1],why:"Текст '5' — это строка! Умножение строки на число повторяет её 3 раза: 555."},
+{topic:'input()',type:'one',q:'Какая команда спрашивает данные у пользователя?',opts:['print()','input()','int()','forward()'],ok:[1],why:'input() считывает данные с клавиатуры и возвращает их программе.'},
+{topic:'Переменные',type:'many',q:'Какие имена переменных правильные?',opts:['user_name','2fast','myAge','my age','total_price'],ok:[0,2,4],why:'Имя не должно начинаться с цифры (2fast) и содержать пробел (my age). Остальные — отличные имена!'},
+{topic:'Черепашка',type:'one_err',q:'Найди ошибку в программе',code:"from turtle import *\ncolor(blue)\nforward(100)",opts:['Забыли кавычки вокруг blue','Забыли скобки у color','У черепашки нет команды color'],ok:[0],why:"Цвет — это текст, он пишется в кавычках: color('blue')."},
+{topic:'Переменные',type:'one',q:'Что напечатает программа?',code:"x = 10\nx = x - 4\nprint(x)",opts:['10','4','6','14'],ok:[2],why:'Значение перезаписалось: 10 − 4 = 6. Старое значение 10 потерялось.'},
+{topic:'Числа и строки',type:'many',q:'Какие строки выведут число без ошибок?',code:"1) print(7 + 8)\n2) print('7 + 8')\n3) print(int('5') + 2)\n4) print('5' + 2)",opts:['1','2','3','4'],ok:[0,2],why:"① и ③ работают с числами. ② выведет текст '7 + 8'. ④ — нельзя сложить строку и число: TypeError."},
+{topic:'Черепашка',type:'one_err',q:'В программе ДВЕ ошибки. Какие?',code:'from turtle import *\nforward("100")\nleft(90',opts:['Число в кавычках и не закрыта скобка','Пропущено двоеточие и лишние пробелы','Число в кавычках и лишние пробелы'],ok:[0],why:'forward("100") — числа пишутся без кавычек: forward(100). А left(90 — не закрыта скобка: left(90).'},
+{topic:'Типы данных',type:'one',q:'Какой тип данных возвращает функция input()?',opts:['int (целое число)','float (дробное число)','str (строка)','bool (True/False)'],ok:[2],why:'input() всегда возвращает строку. Чтобы превратить её в число — int(input()).'}
+];
+const TYPE_LABEL={one:'Один ответ',many:'Несколько ответов',one_err:'Найди ошибку'};
+function blitzQ(cfg,idx){
+return{
+own:true,
+html:()=>`<div class="bigq">
+<div class="row" style="justify-content:center"><span class="chip num">БЛИЦ ${idx+1}/8</span><span class="chip">${esc(cfg.topic)}</span><span class="chip badge">${TYPE_LABEL[cfg.type]||''}</span><span class="chip" data-coin>⭐ Монетки: ${blitzCoins}/8</span></div>
+<h1 class="t">${esc(cfg.q)}</h1>
+${cfg.code?`<div style="width:min(640px,100%)">${codeBox(cfg.code,'вопрос.py')}</div>`:''}
+<div class="opts">${cfg.opts.map((o,k)=>`<div class="opt" data-k="${k}"><span class="let">${'АБВГД'[k]}</span><span>${esc(o)}</span></div>`).join('')}</div>
+<div class="yn"><button class="btn violet" data-show>💡 Показать ответ</button></div>
+<div data-r></div></div>`,
+mount(el){
+$$('.opt',el).forEach(o=>o.addEventListener('click',()=>{toast('Сначала ответьте устно! Потом открывайте ответ 😉');}));
+$('[data-show]',el).onclick=()=>{
+bumpCoin(el,idx);
+$$('.opt',el).forEach(o=>{
+const k=+o.dataset.k;
+if(cfg.ok.includes(k))o.classList.add('ok');else o.classList.add('bad');
+});
+$('[data-r]',el).innerHTML=`<div class="reply ok reveal"><span style="font-size:56px">✅</span><div>${esc(cfg.why)}</div></div>`;
+$('[data-show]',el).disabled=true;$('[data-show]',el).style.opacity=.5;
+confetti();
+};
+}
+};
+}
+/* ===== слайды ===== */
+const R={};
+R.cover={
+own:true,
+html:m=>`<div class="cover"><h1 class="t">${esc(m.title)}</h1><p class="lead">${esc(m.text)}</p>
+<div class="cover-art"><div class="ped"></div><div class="hero float">🐍</div>
+${[['☂️','left:4%;top:10%'],['🌦️','right:6%;top:4%'],['🧮','left:2%;top:58%'],['🐢','right:2%;top:60%'],['💡','left:24%;top:0%'],['⭐','right:22%;top:44%'],['⌨️','left:30%;top:52%'],['✨','right:30%;top:0%']].map(([n,p],i)=>`<span class="fl float" style="${p};animation-delay:-${i*.7}s">${n}</span>`).join('')}</div>
+<div class="loader" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i><span>Добро пожаловать. Загрузка интерфейса…</span></div>
+<button class="btn orange" data-go hidden>Начать миссию ▶</button></div>`,
+mount(el){
+const L=$('.loader',el),sp=$('span',L),go=$('[data-go]',el);let p=0;
+const t=setInterval(()=>{
+p=Math.min(100,p+3+Math.random()*6);L.style.setProperty('--p',p+'%');L.setAttribute('aria-valuenow',Math.round(p));
+if(p>=100){clearInterval(t);sp.textContent='Интерфейс загружен — 100%!';go.hidden=false;}
+},90);
+el._cleanup=()=>clearInterval(t);
+go.onclick=()=>goTo(cur+1);
+}
+};
+R.lesson={
+own:true,
+html:m=>`<div class="sec"><div><div class="eyebrow">${esc(m.tag)} · Python Start</div><h1 class="t">${esc(m.title)}</h1><p class="lead">${esc(m.text)}</p></div><div class="art"><div class="island lesson-art lift"><span class="emj float"><img class="lesson-pic" src="условия.png" alt="Условия — да или нет"></span></div></div></div>`
+};
+R.today={
+html:()=>`<div class="map map4">${[['⭐','Блиц-опрос'],['🧩','Задачи на повторение на платформе'],['🌦️','Новая суперспособность: условия if'],['🧮','Проект: калькулятор с черепашкой']].map(([i,t],k)=>`<div class="mission"><div class="island" style="border-radius:50%;padding:16px"><span class="emj float" style="font-size:80px">${i}</span></div><span class="n">Миссия ${k+1}</span><div class="card-t">${esc(t)}</div></div>`).join('')}</div>
+<div class="fact"><span class="emj" style="font-size:44px">☕</span><span>А между делом нас ждёт <b>перерыв 10 минут</b> с таймером!</span></div>`
+};
+R.blitz={
+own:true,
+html:()=>`<div class="bigq"><div class="arts"><span class="emj float" style="font-size:clamp(90px,12vw,150px)">⭐</span><span class="emj float" style="font-size:clamp(70px,9vw,120px);animation-delay:-1.5s">🧠</span></div>
+<h1 class="t">Блиц-опрос: вспомни пройденное!</h1>
+<p class="lead" style="text-align:center">8 быстрых вопросов прошлым темам. Отвечаем по поднятой руке. За каждый правильный ответ — конфетка!</p>
+<span class="chip" data-coin style="font:900 18px var(--f-display);background:#fff4d0;color:#8a5a00">⭐ Монетки: ${blitzCoins}/8</span></div>`
+};
+BLITZ.forEach((q,i)=>{R['bq'+(i+1)]=blitzQ(q,i);});
+R.platform1={
+own:true,
+html:()=>`<div class="platform"><div class="arts"><span class="emj float" style="font-size:clamp(90px,9vw,140px)">💻</span><span class="emj float" style="font-size:clamp(150px,15vw,230px)">🧩</span><span class="emj float" style="font-size:clamp(70px,8vw,110px)">⭐</span></div>
+<h1 class="t">Выполни задание <span class="no">№1</span> на платформе</h1>
+<p class="lead">Открывай тренажёр «Урок 3 · Повторение» и поехали!</p>
+<div class="row" style="justify-content:center;max-width:1000px">${['🖨️ Афиша','🧾 Бухгалтер 2.0','🐞 Найди ошибку','🎂 Через год','🪪 Визитка','🐷 Копилка','🏠 Дом по запросу','🎨 Выбор цвета'].map(c=>`<span class="chip" style="font-size:14px;padding:9px 14px">${c}</span>`).join('')}</div></div>`
+};
+R.brk={
+own:true,
+html:()=>`<div class="brk" data-brk>
+<h1 class="t">Перерыв! ☕</h1>
+<div class="clock" data-clock>10:00</div>
+<div class="ring"><i data-ring style="width:100%"></i></div>
+<div class="row"><button class="btn" data-start>▶ Старт</button><button class="btn ghost" data-pause hidden>⏸ Пауза</button><button class="btn ghost sm" data-reset>↺ Сброс</button><button class="btn ghost sm" data-more>+5 минут</button></div>
+<div class="done" data-done hidden>✅ Перерыв окончен — продолжаем миссию!</div>
+<p class="lead" style="text-align:center;max-width:52ch;margin:0">Отдохни, разомнись и выпей воды. Черепашка тоже спит 🐢💤</p></div>`,
+mount(el){
+const clock=$('[data-clock]',el),ring=$('[data-ring]',el),done=$('[data-done]',el);
+let total=600,remain=600,t=null,overFired=false;
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const draw=()=>{clock.textContent=fmt(Math.max(0,remain));ring.style.width=(remain/total*100)+'%';};
+const fireOver=()=>{
+el.querySelector('[data-brk]').classList.add('over');
+done.hidden=false;confetti();
+};
+const stop=()=>{clearInterval(t);t=null;$('[data-start]',el).hidden=false;$('[data-pause]',el).hidden=true;};
+const tick=()=>{
+remain--;
+if(remain<=0){remain=0;draw();stop();if(!overFired){overFired=true;fireOver();}return;}
+draw();
+};
+draw();
+el._cleanup=()=>{if(t)clearInterval(t);};
+$('[data-start]',el).onclick=()=>{if(t)return;if(overFired){el.querySelector('[data-brk]').classList.remove('over');done.hidden=true;overFired=false;}
+$('[data-start]',el).hidden=true;$('[data-pause]',el).hidden=false;t=setInterval(tick,1000);};
+$('[data-pause]',el).onclick=()=>{if(t){const r=remain;stop();remain=r;}};
+$('[data-reset]',el).onclick=()=>{stop();total=600;remain=600;overFired=false;el.querySelector('[data-brk]').classList.remove('over');done.hidden=true;draw();};
+$('[data-more]',el).onclick=()=>{total+=300;remain+=300;overFired=false;el.querySelector('[data-brk]').classList.remove('over');done.hidden=true;draw();toast('Добавили 5 минут ☕');};
+}
+};
+const sec=emoji=>({
+own:true,
+html:m=>`<div class="sec"><div><div class="eyebrow">${esc(m.tag)}</div><h1 class="t">${esc(m.title)}</h1>${m.text?`<p class="lead">${esc(m.text)}</p>`:''}</div><div class="art"><span class="emj big float">${emoji}</span></div></div>`
+});
+R.condSec=sec('🌦️');
+R.calcSec=sec('🧮');
+R.umbrellaQ={
+own:true,
+html:m=>`<div class="bigq">
+<div class="arts"><span class="emj float" style="font-size:clamp(90px,13vw,150px)">☂️</span><span class="emj float" style="font-size:clamp(80px,11vw,130px);animation-delay:-1.5s">😎</span></div>
+<h1 class="t">${esc(m.title)}</h1>
+<div class="yn">
+<button class="btn violet" data-a="0">🌂 Беру!</button>
+<button class="btn orange" data-a="1">😎 Не беру!</button>
+</div>
+<div data-r></div></div>`,
+mount(el){
+el.addEventListener('click',e=>{
+const b=e.target.closest('[data-a]');if(!b)return;
+$$('[data-a]',el).forEach(x=>x.classList.toggle('pick-bad',x===b));
+$('[data-r]',el).innerHTML=`<div class="reply reveal" style="flex-direction:column;align-items:flex-start">
+<div style="display:flex;gap:16px;align-items:center"><span style="font-size:56px">🤔</span><div><b>А если не знать, какая погода?</b><br>Значит, сначала нужно <b>ПРОВЕРИТЬ условие</b> — какая погода на улице. Компьютер поступает так же: сначала проверка, потом действие!</div></div>
+<div style="width:100%">${codeBox("# Мысль человека каждый день:\n# ЕСЛИ идёт дождь — беру зонт\n\nif rain == 'да':\n    print('Беру зонт!')",'мысль.py')}</div></div>`;
+});
+}
+};
+R.needSec={
+own:true,
+html:m=>`<div class="bigq">
+<h1 class="t">${esc(m.title)}</h1>
+<div class="needwrap">
+<div class="needlab needlab-l">Научимся создавать<br><b>условную конструкцию</b></div>
+<div class="needcard"><div class="needline" data-ln="1"><span class="kw">Если</span> <span class="needcond">погода == дождь</span>:</div><div class="needline" data-ln="2"><span class="kw">то</span> возьми зонт:</div></div>
+<div class="needlab needlab-r">Научимся создавать<br><b>условия</b></div>
+<svg class="needsvg" aria-hidden="true"><line data-l="1"/><line data-l="2"/></svg>
+</div></div>`,
+mount(el){
+const wrap=$('.needwrap',el),svg=$('.needsvg',el);
+const draw=()=>{
+const W=wrap.offsetWidth,H=wrap.offsetHeight;if(!W)return;
+svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+const rect=n=>{let x=n.offsetLeft,y=n.offsetTop,par=n.offsetParent;while(par&&par!==wrap){x+=par.offsetLeft;y+=par.offsetTop;par=par.offsetParent;}return{x,y,w:n.offsetWidth,h:n.offsetHeight};};
+const L=rect($('.needlab-l',el)),R=rect($('.needlab-r',el)),C=rect($('.needcard',el)),K=rect($('.needcond',el)),N1=rect($('[data-ln="1"]',el)),N2=rect($('[data-ln="2"]',el));
+const l1=$('[data-l="1"]',svg),l2=$('[data-l="2"]',svg);
+l1.setAttribute('x1',L.x+L.w);l1.setAttribute('y1',L.y+L.h*0.45);
+l1.setAttribute('x2',C.x+12);l1.setAttribute('y2',(N1.y+N2.y+N2.h)/2);
+l2.setAttribute('x1',R.x);l2.setAttribute('y1',R.y+R.h*0.45);
+l2.setAttribute('x2',K.x+K.w+8);l2.setAttribute('y2',K.y+K.h*0.5);
+};
+draw();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+window.addEventListener('resize',draw);
+el._cleanup=()=>window.removeEventListener('resize',draw);
+}
+};
+R.condDef={
+html:m=>`<p class="def">Условие — это <em>вопрос с ответом «да» или «нет»</em>. Python отвечает: <b>True</b> (истина) или <b>False</b> (ложь).</p>
+<div class="grid g3" style="margin-top:20px">
+${[['☀️','Семь больше пяти?','7 > 5'],['🐱','Кот — это птица?','"кот" == "птица"'],['🟰','Десять равно десяти?','10 == 10']].map((q,i)=>`<div class="island"><div class="icon-bub t-sky"><span class="emj" style="font-size:42px">${i===0?'☀️':i===1?'🐱':'🟰'}</span></div><div class="card-t">${q[1]}</div><p class="card-d">Выбери ответ — и проверим, что скажет Python!</p><div class="row" style="margin-top:10px"><button class="btn sm" data-y="${i}">Да</button><button class="btn orange sm" data-n="${i}">Нет</button></div><div class="term" style="margin-top:12px;min-height:0" data-t="${i}" hidden></div></div>`).join('')}
+</div>
+<div class="fact" style="margin-top:20px"><span class="emj" style="font-size:44px">💡</span><span><b>True</b> = «да, истина», <b>False</b> = «нет, ложь». Именно True или False проверяет оператор <b>if</b>!</span></div>`,
+mount(el){
+const QUEST=[["print(7 > 5)",'Семь больше пяти — это правда! Python отвечает True.'],['print("кот" == "птица")','Кот — не птица, значит условие ложно: False.'],['print(10 == 10)','Десять равно десяти: True!']];
+el.addEventListener('click',e=>{
+const y=e.target.closest('[data-y]'),n=e.target.closest('[data-n]');
+const b=y||n;if(!b)return;
+const i=+(y?y.dataset.y:n.dataset.n);
+const t=$(`[data-t="${i}"]`,el);t.hidden=false;
+t.innerHTML=termHTML(PY.run(QUEST[i][0]),{echo:true});
+const ok=(i===1&&n)||(i!==1&&y);
+b.insertAdjacentHTML('afterend',`<div class="reply ${ok?'ok':'no'} reveal" style="margin-top:10px"><span style="font-size:40px">${ok?'🎉':'🤔'}</span><div>${esc(QUEST[i][1])}</div></div>`);
+});
+}
+};
+const OPS6=[
+{op:'==',name:'равно',front:"t == 5",res:'True',col:'#10b47f',back:'Вопрос «равно ли?». Два знака = подряд — это проверка, а один знак = кладёт значение в переменную!',ex:"print(5 == 5)\nprint(2 == 3)"},
+{op:'!=',name:'не равно',front:'t != 10',res:'True',col:'#10b47f',back:'Истина, если значения РАЗНЫЕ. Пригодится в задаче про мороженое!',ex:"print(5 != 10)\nprint(5 != 5)"},
+{op:'>',name:'больше',front:'t > 0',res:'True',col:'#10b47f',back:'Больше ли левое число правого? На улице теплее нуля?',ex:"print(7 > 5)\nprint(5 > 7)"},
+{op:'<',name:'меньше',front:'t < 0',res:'False',col:'#ef3d6b',back:'Меньше ли левое число правого? Например, может ли быть гололёд.',ex:"print(3 < 9)\nprint(9 < 3)"},
+{op:'>=',name:'больше или равно',front:'t >= 5',res:'True',col:'#10b47f',back:'True, если левое число больше правого ИЛИ равно ему.',ex:"print(5 >= 5)\nprint(4 >= 5)"},
+{op:'<=',name:'меньше или равно',front:'t <= 5',res:'True',col:'#10b47f',back:'True, если левое число меньше правого ИЛИ равно ему.',ex:"print(5 <= 5)\nprint(6 <= 5)"}
+];
+R.cmpOps={
+html:m=>`<div class="grid g3" style="grid-template-columns:repeat(3,minmax(0,1fr))">${OPS6.map((o,i)=>`<button class="flip" aria-pressed="false"><div class="in">
+<div class="f"><span class="emj" style="font-size:0"></span><code style="font:900 clamp(30px,3.4vw,52px) var(--f-code);color:var(--violet-d)">${o.op}</code><div class="card-t" style="margin:0">${esc(o.name)}</div><code style="font:700 15px var(--f-code);background:var(--card-2);padding:4px 10px;border-radius:9px">${esc(o.front)}</code><span class="chip badge">→ ${o.res}</span><span class="hintx">Нажми, чтобы перевернуть ↻</span></div>
+<div class="b"><div class="card-t">${o.op} — ${esc(o.name)}</div><p>${esc(o.back)}</p>${codeBox(o.ex,'проверка.py')}</div>
+</div></button>`).join('')}</div>
+<div class="fact"><span class="emj" style="font-size:44px">⚠️</span><span><b>==</b> — проверка «равно ли?», а <b>=</b> — «положить в коробку». Это РАЗНЫЕ знаки!</span></div>`,
+mount(el){
+el.addEventListener('click',e=>{const f=e.target.closest('.flip');if(f){f.classList.toggle('on');f.setAttribute('aria-pressed',f.classList.contains('on'));}});
+}
+};
+const WEXPRS=[['t == 10'],['t != 10'],['t > 0'],['t < 0'],['t >= 5'],['t <= 5']];
+R.cmpTry={
+html:m=>`<div class="split">
+<div class="body">
+<div class="island"><div class="row"><span class="emj" style="font-size:44px">🌡️</span><div class="card-t" style="margin:0">Сегодня на улице t = 5</div></div>
+<p class="card-d">Это наша задача про зонт! Подставляй операторы сравнения — смотри, что отвечает Python: True или False.</p>
+<label class="fld"><span>Поменяй температуру t:</span><input data-tv value="5"></label>
+<div class="row" data-ops style="margin-top:10px">${WEXPRS.map((e,i)=>`<button class="btn ghost sm" data-e="${i}">${e[0]}</button>`).join('')}</div></div>
+</div>
+<div class="body">
+<div class="term" data-term style="min-height:140px"><span class="muted">Нажми на оператор слева — увидишь ответ Python.</span></div>
+<div class="fact"><span class="emj" style="font-size:44px">💡</span><span>True — «да, истина», False — «нет, ложь». Меняй t и проверяй снова: а если на улице −3?</span></div>
+</div></div>`,
+mount(el){
+$$('[data-ops] [data-e]',el).forEach(b=>b.onclick=()=>{
+$$('[data-ops] .btn',el).forEach(x=>x.classList.remove('violet'));
+b.classList.add('violet');
+const tv=$('[data-tv]',el).value.trim()||'5';
+if(!/^-?\d+(\.\d+)?$/.test(tv)){$('[data-term]',el).innerHTML=`<span class="err">Введи число, например 5 или -3</span>`;return;}
+const ex=WEXPRS[+b.dataset.e][0].replace(/\bt\b/g,tv);
+$('[data-term]',el).innerHTML=termHTML(PY.run(`t = ${tv}\nprint(${ex})`),{echo:true});
+});
+}
+};
+R.ifAnatomy={
+html:m=>{
+const PARTS=[
+{k:'iff',c:'#c792ff',h:'if',d:'«Если». Команда-проверка: Python смотрит на условие и решает, выполнять тело или нет.'},
+{k:'cond',c:'#5fc3ff',h:"rain == 'да'",d:'Условие — вопрос с ответом True/False. Оператор == сравнивает: «переменная rain равна да?».'},
+{k:'col',c:'#ff8a3d',h:':',d:'Двоеточие завершает строку с if. Без него — SyntaxError!'},
+{k:'body',c:'#3fd7a6',h:"print('Бери зонт!')",d:'Тело — что делать, если условие истинно (True). Пишется с отступом 4 пробела!'}];
+return `<div class="anat"><div class="code"><div class="code-top"><div class="dots"><i></i><i></i><i></i></div><span class="fn">Terminal — python3</span></div><pre class="huge" style="font-size:clamp(20px,3vw,46px)"><span class="k-kw"><span class="part" data-k="iff" style="--pc:#c792ff" tabindex="0">if</span></span> <span class="part" data-k="cond" style="--pc:#5fc3ff" tabindex="0">rain == 'да'</span><span class="part" data-k="col" style="--pc:#ff8a3d" tabindex="0">:</span><br><span class="part" data-k="body" style="--pc:#3fd7a6" tabindex="0">    print('Бери зонт!')</span></pre></div>
+<div class="bubbles">${PARTS.map(p=>`<button class="bub" data-k="${p.k}" style="--pc:${p.c}"><b>${esc(p.h)}</b>${esc(p.d)}</button>`).join('')}</div></div>`;
+},
+mount(el){
+const on=k=>{$$('.part',el).forEach(p=>p.classList.toggle('on',p.dataset.k===k));$$('.bub',el).forEach(b=>b.classList.toggle('on',b.dataset.k===k));};
+el.addEventListener('click',e=>{const p=e.target.closest('[data-k]');if(p)on(p.dataset.k);});
+el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.k)on(e.target.dataset.k);});
+on('cond');
+}
+};
+R.ifSimple={
+own:true,
+html:m=>`<div data-d style="width:100%"></div>`,
+mount(el){
+pyDemo($('[data-d]',el),{
+code:`rain = input('Идёт дождь? да или нет: ')
+if rain == 'да':
+    print('Берём зонт!')
+print('Хорошего дня!')`,
+inputs:[['Идёт дождь? (введи да или нет):','да']],
+question:{q:'Что напечатает программа, если пользователь введёт «нет»?',opts:['Берём зонт! и Хорошего дня!','Хорошего дня!','Ошибку'],ok:1,why:'Условие rain == "да" окажется False — тело if пропускается, выполняется только строка ПОСЛЕ if.'},
+tip:'Меняй значение в поле ввода (да / нет) и запускай снова — следи, когда появляется совет про зонт!'
+});
+}
+};
+R.platform2={
+own:true,
+html:()=>`<div class="platform"><div class="arts"><span class="emj float" style="font-size:clamp(90px,9vw,140px)">💻</span><span class="emj float" style="font-size:clamp(150px,15vw,230px)">🎯</span><span class="emj float" style="font-size:clamp(70px,8vw,110px)">🍦</span></div>
+<h1 class="t">Выполни задание <span class="no">№2</span> на платформе</h1>
+<p class="lead">Тест из 3 вопросов + 3 задачи на if. Одна задача — с секретом: рекомендация мороженого для посетителя кафе!</p>
+<div class="row" style="justify-content:center">${['❓ Тест: 3 вопроса','🔥 «Жарко!» — найди ошибку','🔑 «Допиши программу»','🍦 «Мороженое» — напиши программу'].map(c=>`<span class="chip" style="font-size:14px;padding:9px 14px">${c}</span>`).join('')}</div></div>`
+};
+R.calcAlgo={
+own:true,
+html:m=>`<div data-g style="width:100%"></div>`,
+mount(el){
+orderGame($('[data-g]',el),
+[['🔢','Получить первое число'],['🔢','Получить второе число'],['🎛️','Выбрать действие: + − * /'],['⚙️','Выполнить действие'],['✨','Показать результат']],
+'Алгоритм калькулятора собран! Теперь запрограммируем его по шагам.');
+}
+};
+R.calcStep1={
+html:m=>`<div data-d></div>`,
+mount(el){
+pyDemo($('[data-d]',el),{
+code:`a = int(input('Первое число: '))
+b = int(input('Второе число: '))
+print('Получил числа:', a, 'и', b)`,
+inputs:[['Первое число:','12'],['Второе число:','4']],
+question:{q:'Какого типа будет значение a после a = int(input(...))?',opts:['str (строка)','int (целое число)','float (дробное)'],ok:1,why:'input() вернул строку, но int() сразу превратил её в целое число — с ним можно делать математику.'},
+tip:'Число приходит строкой — поэтому оборачиваем input() в int(). Это мы уже умеем с урока 2!'
+});
+}
+};
+R.calcStep2={
+html:m=>`<div data-d></div>`,
+mount(el){
+pyDemo($('[data-d]',el),{
+code:`op = input('Действие (+ - * /): ')
+print('Ты выбрал(а):', op)`,
+inputs:[['Действие (+ - * /):','+']],
+question:{q:'Что лежит в переменной op, если пользователь ввёл «*»?',opts:['Число','Строку \'*\'','Ошибку'],ok:1,why:'Действие — это тоже данные! Символы + − * / хранятся как строка.'},
+tip:'Раз действие — строка, то сравнивать его будем тоже со строкой: op == \'+\''
+});
+}
+};
+R.calcStep3={
+own:true,
+html:m=>`<div data-d style="width:100%"></div>`,
+mount(el){
+pyDemo($('[data-d]',el),{
+code:`a = int(input('Первое число: '))
+b = int(input('Второе число: '))
+op = input('Действие (+ - * /): ')
+result = 0
+if op == '+':
+    result = a + b
+print('Ответ:', result)`,
+inputs:[['Первое число:','12'],['Второе число:','4'],['Действие (+ - * /):','+']],
+question:{q:'Введи 12, 4 и «+» — что напечатает программа?',opts:['Ответ: 16','Ответ: 84','Ответ: 8'],ok:0,why:'Условие op == "+" истинно → result = a + b = 16. Проверь «−» — и увидишь, что result останется 0. Этим мы и займёмся на следующем слайде!'},
+tip:'Пиши вместе со мной! Мы попросили два числа, спросили действие и проверили условие для «+». Обрати внимание: тело if — с отступом!'
+});
+}
+};
+R.calcYourTurn={
+html:m=>`<div data-d></div>`,
+mount(el){
+codeLab($('[data-d]',el),{
+title:'Калькулятор — твой ход!',
+edHint:'допиши три условия!',
+code:`# КАЛЬКУЛЯТОР. Действие "+" уже работает!
+# Твоя очередь: допиши условия для "-", "*" и "/".
+
+a = int(input('Первое число: '))
+b = int(input('Второе число: '))
+op = input('Действие (+ - * /): ')
+
+result = 0
+if op == '+':
+    result = a + b
+
+# 1) Вычитание:
+# if op == '-':
+#     result = ...
+
+# 2) Умножение:
+# if op == '*':
+#     result = ...
+
+# 3) Деление:
+# if op == '/':
+#     result = ...
+
+print('Ответ:', result)`,
+inputs:['Первое число:','Второе число:','Действие (+ - * /):'],
+defaults:['12','4','+'],
+tip:'По образцу «плюса» допиши вычитание, умножение и деление. Проверь все четыре действия с числами 12 и 4: должно выйти 16, 8, 48 и 3.0!'
+});
+}
+};
+R.turtleOut={
+html:m=>`<div data-d></div>`,
+mount(el){
+pyDemo($('[data-d]',el),{
+turtle:true,
+turtleOpt:{w:440,h:280,speed:1.8},
+tabs:[
+{name:'✍️ Просто текст',code:`from turtle import *
+hideturtle()
+penup()
+write('Привет, я черепашка!')
+exitonclick()`},
+{name:'🔤 Крупный текст',code:`from turtle import *
+hideturtle()
+penup()
+write('Ответ: 16', font=('Arial', 24, 'bold'))
+exitonclick()`}],
+question:{q:'Что сделает команда hideturtle()?',opts:['Сотрёт текст','Спрячет саму черепашку-курсор','Выключит программу'],ok:1,why:'hideturtle() прячет курсор-черепашку, чтобы он не мешал читать текст. На рисунке останется только надпись!'},
+tip:"write(текст) — черепашка ПИШЕТ текст там, где стоит. font=(имя, размер, стиль) задаёт шрифт: font=('Arial', 24, 'bold')."
+});
+}
+};
+R.calcFinal={
+html:m=>`<div data-d></div>`,
+mount(el){
+codeLab($('[data-d]',el),{
+title:'Калькулятор + черепашка — готов!',
+edHint:'запускай и сравнивай со своим кодом!',
+turtle:true,
+turtleOpt:{w:440,h:280,speed:1.8},
+code:`from turtle import *
+hideturtle()
+penup()
+
+a = int(input('Первое число: '))
+b = int(input('Второе число: '))
+op = input('Действие (+ - * /): ')
+
+result = 0
+if op == '+':
+    result = a + b
+if op == '-':
+    result = a - b
+if op == '*':
+    result = a * b
+if op == '/':
+    result = a / b
+
+write('Ответ: ' + str(result), font=('Arial', 24, 'bold'))
+exitonclick()
+
+# БОНУС для самых сильных: защити деление на ноль двумя if:
+# if op == '/':
+#     if b != 0:
+#         result = a / b`,
+inputs:['Первое число:','Второе число:','Действие (+ - * /):'],
+defaults:['12','4','*'],
+tip:'Наш калькулятор готов — результат рисует черепашка командой write()! Сравни с кодом, который получился у тебя.'
+});
+}
+};
+R.final={
+html:m=>`<div class="grid g2">${[
+['🌦️','Условие','Вопрос с ответом True или False. Сравниваем операторами: == != > < >= <=.'],
+['⚡','Оператор if','Если условие истинно — выполняется тело (отступ 4 пробела). Если ложно — тело просто пропускается.'],
+['🧮','Проект «Калькулятор»','Спросили два числа, спросили действие, через if выбрали операцию — и вывели результат через write() черепашки!'],
+['⭐','Главное правило','== — это вопрос «равно?», а = кладёт значение в переменную. Не путай их — иначе программа сломается!']
+].map(([i,h,d])=>`<div class="island lift"><div class="icon-bub t-sun"><span class="emj" style="font-size:42px">${i}</span></div><div class="card-t">${esc(h)}</div><p class="card-d">${esc(d)}</p></div>`).join('')}</div>`
+};
+R.outro={
+own:true,
+html:()=>`<div class="grid g3">${[['🧠','Что узнали?','Условие — вопрос с ответом True/False. Оператор if выполняет тело, когда условие истинно. Сравниваем: == != > < >= <=.'],['🤔','Что оказалось сложным?','Обсудите в классе: не путаете = и ==? Не забываете двоеточие и отступ в 4 пробела внутри if?'],['🌍','Где бы мне это пригодилось?','Игры, чат-боты, калькуляторы, умные дома — везде программа решает «если … то …»!']].map(([i,h,d])=>`<button class="flip" aria-pressed="false"><div class="in"><div class="f"><span class="emj" style="font-size:96px">${i}</span><div class="card-t">${h}</div><span class="hintx">Нажми, чтобы перевернуть ↻</span></div><div class="b"><div class="card-t">${h}</div><p>${d}</p></div></div></button>`).join('')}</div>
+<div class="row" style="justify-content:center;margin-top:16px"><button class="btn orange" data-go style="font-size:clamp(18px,2vw,24px);padding:20px 34px">🚀 Урок 3 пройден! Дальше — новые уровни!</button></div>`,
+mount(el){
+el.addEventListener('click',e=>{const f=e.target.closest('.flip');if(f){f.classList.toggle('on');f.setAttribute('aria-pressed',f.classList.contains('on'));}});
+$('[data-go]',el).onclick=confetti;
+}
+};
+/* ===== META ===== */
+const META=[
+{id:'cover',tag:'Старт',badge:'Миссия №3',title:'Python Start: Урок 3. Условный оператор',text:'',mood:'day',lead:true},
+{id:'lesson',tag:'Урок 3',badge:'Вводный урок',title:'Урок 3. Условный оператор',text:'Сегодня — новая миссия. Твои программы впервые научатся выбирать, что делать: проверять условия и действовать по ситуации.',mood:'day',lead:true},
+{id:'today',tag:'План',badge:'4 миссии',title:'Сегодня на занятии',text:'Четыре миссии урока: блиц-повторение, практика на платформе, новая суперспособность — условия, и свой первый проект-калькулятор!',mood:'day',lead:true},
+{id:'blitz',tag:'Блиц',badge:'Вспомним!',title:'Блиц-опрос: вспомни пройденное!',text:'',mood:'day'},
+{id:'bq1',tag:'Блиц',badge:'Вопрос 1',title:'Блиц 1. Что напечатает команда?',text:'',mood:'day'},
+{id:'bq2',tag:'Блиц',badge:'Вопрос 2',title:'Блиц 2. Команда-вопрос',text:'',mood:'day'},
+{id:'bq3',tag:'Блиц',badge:'Вопрос 3',title:'Блиц 3. Проверь имена',text:'',mood:'day'},
+{id:'bq4',tag:'Блиц',badge:'Вопрос 4',title:'Блиц 4. Найди ошибку',text:'',mood:'day'},
+{id:'bq5',tag:'Блиц',badge:'Вопрос 5',title:'Блиц 5. Что в коробке?',text:'',mood:'day'},
+{id:'bq6',tag:'Блиц',badge:'Вопрос 6',title:'Блиц 6. Числа или строки?',text:'',mood:'day'},
+{id:'bq7',tag:'Блиц',badge:'Вопрос 7',title:'Блиц 7. Две ошибки!',text:'',mood:'day'},
+{id:'bq8',tag:'Блиц',badge:'Вопрос 8',title:'Блиц 8. Какой тип вернётся?',text:'',mood:'day'},
+{id:'platform1',tag:'Задание',badge:'Платформа',title:'Выполни задание №1 на платформе',text:'',mood:'day'},
+{id:'brk',tag:'Перерыв',badge:'Таймер',title:'Перерыв!',text:'',mood:'day'},
+{id:'condSec',tag:'Раздел',badge:'Условный оператор',title:'Условный оператор',text:'Учимся проверять условия и принимать решения.',mood:'day',lead:true},
+{id:'umbrellaQ',tag:'Проблема',badge:'Вопрос дня',title:'Нужен ли мне сегодня зонт?',text:'',mood:'day'},
+{id:'needSec',tag:'План',badge:'2 суперсилы',title:'Что понадобится, чтобы собрать такую программу?',text:'',mood:'day'},
+{id:'condDef',tag:'Условие',badge:'Определение',title:'Что такое условие?',text:'',mood:'day',lead:true},
+{id:'cmpOps',tag:'Сравнение',badge:'6 операторов',title:'Как сравнивать: операторы сравнения',text:'Шесть суперсил для проверки условий. Все примеры — про погоду в нашей задаче про зонт (t = 5). Нажми на карточку — увидишь больше!',mood:'day',lead:true},
+{id:'cmpTry',tag:'Практика',badge:'Погода',title:'Проверим погоду: подставь оператор!',text:'У нас есть температура за окном. Подставляй разные операторы сравнения — смотри, что отвечает Python: True или False.',mood:'day',lead:true},
+{id:'ifAnatomy',tag:'if',badge:'Анатомия',title:'Условный оператор if',text:'Разберём команду по частям. Нажми на любую часть кода!',mood:'day',lead:true},
+{id:'ifSimple',tag:'if',badge:'Лаборатория',title:'if без else: работает даже если условие ложно',text:'',mood:'lab'},
+{id:'platform2',tag:'Задание',badge:'Платформа',title:'Выполни задание №2 на платформе',text:'',mood:'day'},
+{id:'calcSec',tag:'Проект',badge:'Калькулятор',title:'Проект: Калькулятор',text:'Собираем настоящий калькулятор на Python!',mood:'day',lead:true},
+{id:'calcAlgo',tag:'Алгоритм',badge:'Расставь шаги',title:'Алгоритм работы калькулятора',text:'Как работает любой калькулятор? Сначала разберёмся по шагам — а потом запрограммируем!',mood:'day',lead:true},
+{id:'calcStep1',tag:'Код',badge:'Шаг 1',title:'Шаг 1: спрашиваем числа',text:'Пишем вместе! Число от пользователя приходит строкой — превращаем в число через int().',mood:'day',lead:true},
+{id:'calcStep2',tag:'Код',badge:'Шаг 2',title:'Шаг 2: спрашиваем действие',text:'Действие — это тоже данные! Плюс, минус, звёздочка или слэш.',mood:'day',lead:true},
+{id:'calcStep3',tag:'Код',badge:'Пишем вместе',title:'Шаг 3: условие для «+»',text:'Если пользователь выбрал плюс — складываем. Пиши вместе со мной!',mood:'lab',lead:true},
+{id:'calcYourTurn',tag:'Задание',badge:'Самостоятельно',title:'Твоя очередь: − × ÷',text:'По образцу «плюса» допиши три условия: вычитание, умножение и деление.',mood:'lab',lead:true},
+{id:'turtleOut',tag:'Черепашка',badge:'Дисплей',title:'Подключаем черепашку-дисплей!',text:'print — скучно! Пусть результат рисует черепашка: она умеет ПИСАТЬ текст командой write().',mood:'lab',lead:true},
+{id:'calcFinal',tag:'Проект',badge:'Готов!',title:'Готовый калькулятор с черепашкой',text:'Сравни свой код с образцом и запусти: результат рисует черепашка!',mood:'lab',lead:true},
+{id:'final',tag:'Итоги',badge:'Выводы',title:'Итоги занятия',text:'Миссия выполнена! Подведём итоги.',mood:'day',lead:true},
+{id:'outro',tag:'Итоги',badge:'Рефлексия',title:'Уровень пройден!',text:'',mood:'night'}
+];
+/* ===== движок презентации ===== */
+let cur=0;
+const N=META.length,slideEl=$('#slide');
+function head(m,i){
+return `<div class="sl-head"><span class="chip num">СЛАЙД ${i+1} ИЗ ${N}</span><span class="chip">${esc(m.tag)}</span><span class="sp"></span><span class="chip badge">✨ ${esc(m.badge)}</span></div>`;
+}
+let curWrap=null;
+function fitSlide(){
+const w=curWrap;if(!w)return;
+w.style.zoom='';
+if(innerWidth<900)return;
+const cs=getComputedStyle(slideEl),padV=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom);
+let k=1;
+for(let n=0;n<5;n++){
+const content=slideEl.scrollHeight-padV,avail=slideEl.clientHeight-padV;
+if(content<=avail+1)break;
+k=Math.max(0.55,k*avail/content);
+w.style.zoom=k;
+if(k===0.55)break;
+}
+}
+let fitT;
+window.addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(fitSlide,120);});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitSlide);
+function render(i,anim=true){
+if(curWrap&&curWrap._cleanup){try{curWrap._cleanup();}catch(e){}}
+cur=Math.max(0,Math.min(N-1,i));
+const m=META[cur],r=R[m.id]||{html:()=>''};
+const dark=m.mood==='lab'||m.mood==='night';
+document.body.dataset.bg=m.mood==='lab'?'lab':m.mood==='night'?'night':String(cur%5);
+slideEl.className='slide'+(dark?' dark':'');
+const wrap=document.createElement('div');
+wrap.innerHTML=head(m,cur)+(r.own?'':`<h1 class="t">${esc(m.title)}</h1>${m.lead&&m.text?`<p class="lead">${esc(m.text)}</p>`:''}`)+`<div class="body">${r.html(m)}</div>`;
+slideEl.replaceChildren(wrap);curWrap=wrap;
+slideEl.scrollTop=0;
+if(anim){slideEl.classList.remove('anim');void slideEl.offsetWidth;slideEl.classList.add('anim');}
+if(r.mount)r.mount(wrap,m);
+fitSlide();
+$('#cN').textContent=cur+1;$('#cT').textContent=N;$('#cP').style.width=((cur+1)/N*100)+'%';
+try{history.replaceState(null,'','#s'+(cur+1));}catch(e){}
+}
+function goTo(i){if(i<0||i>=N||i===cur)return;render(i);}
+$('#bPrev').onclick=()=>goTo(cur-1);
+$('#bNext').onclick=()=>goTo(cur+1);
+$('#bRestart').onclick=()=>goTo(0);
+$('#bFull').onclick=()=>{try{if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>toast('Полноэкранный режим недоступен здесь'));else document.exitFullscreen();}catch(e){toast('Полноэкранный режим недоступен здесь');}};
+document.addEventListener('keydown',e=>{
+if(e.target.closest('textarea,input'))return;
+if(!$('#ovGrid').hidden){if(e.key==='Escape')$$('.ov').forEach(o=>o.hidden=true);return;}
+if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();goTo(cur+1);}
+if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goTo(cur-1);}
+if(e.key==='Home')goTo(0);if(e.key==='End')goTo(N-1);
+});
+$$('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o||e.target.closest('[data-close]'))o.hidden=true;}));
+$('#bGrid').onclick=()=>{
+$('#thumbs').innerHTML=META.map((m,i)=>`<button class="thumb ${i===cur?'cur':''}" data-i="${i}"><b>${String(i+1).padStart(2,'0')}</b><span>${esc(m.title)}</span><em>${esc(m.tag)} · ${esc(m.badge)}</em></button>`).join('');
+$('#ovGrid').hidden=false;
+};
+$('#thumbs').addEventListener('click',e=>{const t=e.target.closest('.thumb');if(t){$('#ovGrid').hidden=true;goTo(+t.dataset.i);}});
+const hm=/^#s(\d+)$/.exec(location.hash);
+render(hm?(+hm[1]-1):0,false);
+</script>
+</body>
+</html>
